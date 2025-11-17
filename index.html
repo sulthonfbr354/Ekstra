@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SMA Negeri 1 Turen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background:  #ffffff;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">SMA Negeri 1 Turen</h1>
+            <p class="text-gray-600 mt-2">Sistem Pemilihan Ekstra</p>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="flex border-b mb-6">
+            <button 
+                onclick="showTab('login')" 
+                class="flex-1 py-2 font-medium text-gray-500 border-b-2 border-transparent hover:text-indigo-600 hover:border-indigo-600 transition duration-300 active-tab" 
+                id="login-tab-btn"
+            >
+                Login
+            </button>
+            <button 
+                onclick="showTab('register')" 
+                class="flex-1 py-2 font-medium text-gray-500 border-b-2 border-transparent hover:text-indigo-600 hover:border-indigo-600 transition duration-300" 
+                id="register-tab-btn"
+            >
+                Daftar
+            </button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="space-y-6">
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">NIS / Username</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                    placeholder="Masukkan NIS atau Username"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                    placeholder="Masukkan Password"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="role" class="block text-sm font-medium text-gray-700 mb-1">Peran</label>
+                <select 
+                    id="role" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                    <option value="admin">Admin</option>
+                    <option value="peserta">Peserta</option>
+                </select>
+            </div>
+
+            <button 
+                type="submit" 
+                class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition duration-300 shadow-lg"
+            >
+                Login
+            </button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" class="space-y-6 hidden">
+            <div>
+                <label for="reg_nama" class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
+                <input 
+                    type="text" 
+                    id="reg_nama" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                    placeholder="Masukkan Nama Lengkap"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="reg_nis" class="block text-sm font-medium text-gray-700 mb-1">NIS</label>
+                <input 
+                    type="text" 
+                    id="reg_nis" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                    placeholder="Masukkan NIS"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="reg_kelas" class="block text-sm font-medium text-gray-700 mb-1">Kelas</label>
+                <input 
+                    type="text" 
+                    id="reg_kelas" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                    placeholder="Contoh: XII-A"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="reg_no_hp" class="block text-sm font-medium text-gray-700 mb-1">No. HP</label>
+                <input 
+                    type="text" 
+                    id="reg_no_hp" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                    placeholder="Contoh: 081234567890"
+                >
+            </div>
+
+            <div>
+                <label for="reg_password" class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                <input 
+                    type="password" 
+                    id="reg_password" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                    placeholder="Masukkan Password"
+                    required
+                >
+            </div>
+
+            <div>
+                <label for="reg_confirm_password" class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password</label>
+                <input 
+                    type="password" 
+                    id="reg_confirm_password" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                    placeholder="Ulangi Password"
+                    required
+                >
+            </div>
+
+            <button 
+                type="submit" 
+                class="w-full bg-gradient-to-r from-green-600 to-teal-600 text-white py-3 rounded-lg font-semibold hover:from-green-700 hover:to-teal-700 transition duration-300 shadow-lg"
+            >
+                Daftar Akun
+            </button>
+        </form>
+
+        <p class="text-center text-gray-500 text-sm mt-6">
+            © 2025 SMA Negeri 1 Turen. All rights reserved.
+        </p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+    <script>
+        let db;
+
+        // Inisialisasi database SQLite
+        initSqlJs().then(function(SQL) {
+            const savedDb = localStorage.getItem('db');
+            if (savedDb) {
+                console.log("Memuat database dari localStorage...");
+                const data = JSON.parse(savedDb);
+                const buffer = new Uint8Array(data);
+                db = new SQL.Database(buffer);
+            } else {
+                console.log("Membuat database baru...");
+                db = new SQL.Database(); // Buat database baru
+            }
+
+            // Buat tabel jika belum ada
+            db.run(`
+                CREATE TABLE IF NOT EXISTS peserta (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    nama TEXT NOT NULL,
+                    nis TEXT UNIQUE NOT NULL,
+                    kelas TEXT,
+                    no_hp TEXT,
+                    password TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS ekstra (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    nama TEXT NOT NULL,
+                    deskripsi TEXT,
+                    foto TEXT
+                );
+                CREATE TABLE IF NOT EXISTS pendaftaran (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    ekstra TEXT NOT NULL,
+                    status TEXT DEFAULT 'menunggu'
+                );
+            `);
+
+            // Simpan database ke localStorage setiap kali ada perubahan
+            setInterval(() => {
+                const data = db.export();
+                const buffer = new Uint8Array(data);
+                localStorage.setItem('db', JSON.stringify(Array.from(buffer)));
+            }, 1000);
+
+            console.log("Database SQLite siap!");
+        }).catch(err => {
+            console.error("Gagal memuat SQLite.js:", err);
+            alert("Gagal memuat database. Pastikan kamu membuka file ini lewat web server lokal (misal: Live Server di VS Code).");
+        });
+
+        // Fungsi untuk menampilkan tab
+        function showTab(tabName) {
+            if (tabName === 'login') {
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('registerForm').classList.add('hidden');
+                document.getElementById('login-tab-btn').classList.add('active-tab', 'text-indigo-600', 'border-indigo-600');
+                document.getElementById('register-tab-btn').classList.remove('active-tab', 'text-indigo-600', 'border-indigo-600');
+            } else if (tabName === 'register') {
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('registerForm').classList.remove('hidden');
+                document.getElementById('register-tab-btn').classList.add('active-tab', 'text-indigo-600', 'border-indigo-600');
+                document.getElementById('login-tab-btn').classList.remove('active-tab', 'text-indigo-600', 'border-indigo-600');
+            }
+        }
+
+        // Fungsi login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+
+            if (!db) {
+                alert("Database belum siap. Coba refresh halaman.");
+                return;
+            }
+
+            if (role === 'admin') {
+                // Login sebagai admin
+                if (username === 'admin' && password === 'admin123') {
+                    alert('Login Admin Berhasil!');
+                    localStorage.setItem('currentUser', JSON.stringify({
+                        role: 'admin',
+                        username: username
+                    }));
+                    window.location.href = 'admin.html';
+                } else {
+                    alert('Username atau password admin salah!');
+                }
+            } else if (role === 'peserta') {
+                // Login sebagai peserta (cek database)
+                const result = db.exec(`
+                    SELECT id, nama, nis, kelas, no_hp 
+                    FROM peserta 
+                    WHERE nis = ? AND password = ?
+                `, [username, password]);
+
+                if (result.length > 0 && result[0].values.length > 0) {
+                    const user = result[0].values[0];
+                    
+                    // Simpan data user ke localStorage
+                    localStorage.setItem('currentUser', JSON.stringify({
+                        id: user[0],
+                        role: 'peserta',
+                        nama: user[1],
+                        nis: user[2],
+                        kelas: user[3],
+                        no_hp: user[4]
+                    }));
+
+                    alert(`Login berhasil! Selamat datang, ${user[1]}`);
+                    window.location.href = 'daftar-ekstra.html';
+                } else {
+                    alert('NIS atau password peserta salah!');
+                }
+            }
+        });
+
+        // Fungsi register
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nama = document.getElementById('reg_nama').value;
+            const nis = document.getElementById('reg_nis').value;
+            const kelas = document.getElementById('reg_kelas').value;
+            const noHp = document.getElementById('reg_no_hp').value;
+            const password = document.getElementById('reg_password').value;
+            const confirmPassword = document.getElementById('reg_confirm_password').value;
+
+            if (password !== confirmPassword) {
+                alert('Password dan konfirmasi password tidak cocok!');
+                return;
+            }
+
+            if (!db) {
+                alert("Database belum siap. Coba refresh halaman.");
+                return;
+            }
+
+            // Cek apakah NIS sudah terdaftar
+            const checkResult = db.exec("SELECT COUNT(*) AS total FROM peserta WHERE nis = ?", [nis]);
+            if (checkResult[0].values[0][0] > 0) {
+                alert('NIS sudah terdaftar. Gunakan NIS lain.');
+                return;
+            }
+
+            // Tambahkan peserta baru ke database
+            db.run("INSERT INTO peserta (nama, nis, kelas, no_hp, password) VALUES (?, ?, ?, ?, ?)", 
+                   [nama, nis, kelas, noHp, password]);
+
+            alert(`Pendaftaran berhasil! Silakan login dengan NIS: ${nis}`);
+            
+            // Reset form dan kembali ke login
+            document.getElementById('registerForm').reset();
+            showTab('login');
+        });
+
+        // Default show login tab
+        showTab('login');
+    </script>
+</body>
+</html>
