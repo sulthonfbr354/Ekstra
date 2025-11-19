@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notifikasi Ekstrakurikuler</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        'app-blue': '#4F46E5',
+                        'app-gray-text': '#4B5563',
+                        'app-bg': '#F9FAFB',
+                        'app-card-border': '#E5E7EB',
+                        'app-badge-bg': '#EEF2FF',
+                        'app-unread-bg': '#FFFFFF',
+                        'app-read-bg': '#E5E7EB',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'poppins', sans-serif;
+            background-color: #F3F4F6;
+        }
+        .location-icon {
+            color: #EF4444;
+        }
+
+        /* Animasi fade up */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <div class="max-w-4xl mx-auto min-h-screen p-6 sm:p-8 bg-white rounded-xl shadow-xl flex flex-col">
+
+        <header class="mb-8 pt-10">
+            <div class="flex items-center space-x-3 text-gray-800">
+                <a href="daftar-ekstra.html" class="h-6 w-6 cursor-pointer hover:text-app-blue">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                    </svg>
+                </a>
+                <h1 class="text-xl sm:text-4xl font-semibold">
+                    Notifikasi Ekstrakurikuler
+                </h1>
+            </div>
+            <p class="mt-4 text-app-gray-text text-sm sm:text-base">
+                Berikut adalah pengumuman dan informasi terbaru terkait semua kegiatan ekstrakurikuler sekolah.
+            </p>
+            <button id="mark-all-read" class="mt-4 text-xs font-medium text-app-blue hover:text-blue-700 transition duration-150">
+                Tandai Semua Sudah Dibaca
+            </button>
+        </header>
+
+        <div id="notifications-container" class="space-y-4">
+            <!-- Notifikasi akan ditampilkan di sini -->
+        </div>
+
+        <div class="text-center mt-8 pb-10">
+            <button id="load-more-btn" class="text-sm font-medium text-app-blue hover:text-blue-700 transition duration-150">
+                Lihat Lainnya
+            </button>
+        </div>
+
+    </div>
+
+    <div id="notification-modal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden p-4 transition-opacity duration-300">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all duration-300">
+            <div class="flex justify-between items-center p-5 border-b border-gray-200">
+                <h3 id="modal-title" class="text-xl font-bold text-gray-900">Judul Notifikasi</h3>
+                <button id="modal-close-btn" class="text-gray-400 hover:text-gray-600 focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <div class="p-5 space-y-4">
+                <p id="modal-description" class="text-app-gray-text text-base">Deskripsi lengkap notifikasi.</p>
+                <div class="flex items-center text-sm text-app-gray-text">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-app-blue mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <span id="modal-datetime">2025-11-20 - 15:00</span>
+                </div>
+                <div class="flex items-center text-sm text-app-gray-text">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 location-icon mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                    </svg>
+                    <span id="modal-location">Lokasi: Lapangan Utama</span>
+                </div>
+            </div>
+
+            <div class="p-5 border-t border-gray-200 flex justify-between">
+                <button id="modal-delete-btn" class="p-2 bg-transparent rounded-full hover:bg-gray-100 transition duration-150">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                </button>
+                <button id="modal-mark-read-btn" class="px-4 py-2 bg-app-blue text-white font-semibold rounded-lg shadow-md hover:bg-indigo-700 transition duration-150 disabled:bg-gray-400">
+                    Tandai Telah Dibaca
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data awal (tidak dikosongkan)
+        const initialNotifications = [
+            { id: '1', title: 'Latihan Rutin Basket', description: 'Wajib diikuti semua anggota tim. Persiapan untuk turnamen antar sekolah.', location: 'Lapangan Utama', datetime: '2025-11-20 - 15:00', isRead: false },
+            { id: '2', title: 'Pendaftaran Baru Klub Debat', description: 'Terbuka untuk siswa kelas X dan XI. Ambil formulir di sekretariat.', location: 'Ruang OSIS', datetime: '2025-11-25 - Sepanjang hari', isRead: false },
+            { id: '3', title: 'Rapat Anggota Pramuka', description: 'Pembahasan jadwal kegiatan semester depan.', location: 'Bumi Perkemahan', datetime: '2025-11-22 - 14:30', isRead: false }
+        ];
+
+        // Gunakan initialNotifications sebagai data awal
+        let currentNotifications = [...initialNotifications];
+
+        const notificationsContainer = document.getElementById('notifications-container');
+        const markAllReadButton = document.getElementById('mark-all-read');
+        const loadMoreButton = document.getElementById('load-more-btn');
+
+        const modal = document.getElementById('notification-modal');
+        const modalCloseBtn = document.getElementById('modal-close-btn');
+        const modalDeleteBtn = document.getElementById('modal-delete-btn');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDescription = document.getElementById('modal-description');
+        const modalDatetime = document.getElementById('modal-datetime');
+        const modalLocation = document.getElementById('modal-location');
+        const modalMarkReadBtn = document.getElementById('modal-mark-read-btn');
+
+        // Fungsi untuk membuat 3 notifikasi dummy baru
+        function generateDummyNotifications(count = 3) {
+            const baseDate = new Date();
+            const titles = [
+                'Latihan Rutin Basket', 'Pendaftaran Baru Klub Debat', 'Rapat Anggota Pramuka',
+                'Kegiatan Teater Sekolah', 'Workshop Fotografi', 'Pelatihan Musik Tradisional',
+                'Kemah Siswa', 'Lomba Cerdas Cermat', 'Pameran Seni Rupa'
+            ];
+            const descriptions = [
+                'Wajib diikuti semua anggota tim. Persiapan untuk turnamen antar sekolah.',
+                'Terbuka untuk siswa kelas X dan XI. Ambil formulir di sekretariat.',
+                'Pembahasan jadwal kegiatan semester depan.',
+                'Latihan rutin setiap Jumat sore. Semua anggota wajib hadir.',
+                'Pelatihan dasar fotografi dan editing. Bawa kamera masing-masing.',
+                'Belajar alat musik tradisional seperti gamelan dan angklung.',
+                'Kemah selama 2 hari di Bumi Perkemahan. Bawa perlengkapan pribadi.',
+                'Lomba pengetahuan umum antar kelas. Pendaftaran hingga akhir bulan.',
+                'Pameran karya seni siswa. Pembukaan pada tanggal 30 November.'
+            ];
+            const locations = [
+                'Lapangan Utama', 'Ruang OSIS', 'Bumi Perkemahan',
+                'Aula Sekolah', 'Lab Multimedia', 'Ruang Musik',
+                'Bumi Perkemahan', 'Aula Sekolah', 'Galeri Seni'
+            ];
+
+            const newNotifications = [];
+            for (let i = 0; i < count; i++) {
+                const randomIndex = Math.floor(Math.random() * titles.length);
+                const date = new Date(baseDate.getTime() + (i * 86400000)); // +1 hari per notifikasi
+                const formattedDate = `${date.toISOString().split('T')[0]} - ${10 + i}:${30 + (i * 10)}`
+                newNotifications.push({
+                    id: Date.now() + i,
+                    title: titles[randomIndex],
+                    description: descriptions[randomIndex],
+                    location: locations[randomIndex],
+                    datetime: formattedDate,
+                    isRead: false
+                });
+            }
+            return newNotifications;
+        }
+
+        function renderNotifications() {
+            notificationsContainer.innerHTML = '';
+
+            if (currentNotifications.length === 0) {
+                notificationsContainer.innerHTML = '<p class="text-center text-app-gray-text py-10">Tidak ada notifikasi baru saat ini.</p>';
+            } else {
+                currentNotifications.forEach((notif, index) => {
+                    const bgColorClass = notif.isRead ? 'bg-app-read-bg' : 'bg-app-unread-bg';
+
+                    const notifCard = document.createElement('div');
+                    notifCard.className = `p-4 sm:p-6 shadow-md hover:shadow-lg transition-shadow duration-300 rounded-xl border border-app-card-border cursor-pointer ${bgColorClass} fade-in-up`;
+                    notifCard.style.animationDelay = `${index * 0.1}s`;
+                    notifCard.setAttribute('data-id', notif.id);
+
+                    notifCard.innerHTML = `
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                            <h2 class="text-lg font-semibold text-gray-900 mb-2 sm:mb-0">${notif.title}</h2>
+                            <span class="text-xs font-medium px-3 py-1 bg-app-badge-bg text-app-blue rounded-full whitespace-nowrap">${notif.datetime}</span>
+                        </div>
+                        <p class="mt-2 text-sm text-app-gray-text">${notif.description}</p>
+                        <div class="mt-2 flex items-center text-xs text-app-gray-text">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 location-icon mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                            </svg>
+                            <span>Lokasi: ${notif.location}</span>
+                        </div>
+                    `;
+
+                    notifCard.addEventListener('click', () => openModal(notif));
+                    notificationsContainer.appendChild(notifCard);
+                });
+            }
+        }
+
+        function openModal(notif) {
+            modalTitle.textContent = notif.title;
+            modalDescription.textContent = notif.description;
+            modalDatetime.textContent = notif.datetime;
+            modalLocation.textContent = `Lokasi: ${notif.location}`;
+
+            modalMarkReadBtn.setAttribute('data-notif-id', notif.id);
+            modalDeleteBtn.setAttribute('data-notif-id', notif.id);
+            modalMarkReadBtn.disabled = notif.isRead;
+            modalMarkReadBtn.textContent = notif.isRead ? 'Sudah Dibaca' : 'Tandai Telah Dibaca';
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            modal.classList.add('hidden');
+            modalMarkReadBtn.removeAttribute('data-notif-id');
+            modalDeleteBtn.removeAttribute('data-notif-id');
+        }
+
+        function markAsRead(notifId, status = true) {
+            const notifIndex = currentNotifications.findIndex(n => n.id === notifId);
+            if (notifIndex !== -1) {
+                currentNotifications[notifIndex].isRead = status;
+                renderNotifications();
+            }
+        }
+
+        function deleteNotification(notifId) {
+            currentNotifications = currentNotifications.filter(n => n.id !== notifId);
+            renderNotifications();
+            closeModal();
+        }
+
+        function markAllAsRead() {
+            currentNotifications = currentNotifications.map(notif => ({ ...notif, isRead: true }));
+            renderNotifications();
+        }
+
+        // Event listeners
+        modalMarkReadBtn.addEventListener('click', () => {
+            const notifId = modalMarkReadBtn.getAttribute('data-notif-id');
+            if (notifId && !modalMarkReadBtn.disabled) {
+                markAsRead(notifId, true);
+                closeModal();
+            }
+        });
+
+        modalDeleteBtn.addEventListener('click', () => {
+            const notifId = modalDeleteBtn.getAttribute('data-notif-id');
+            if (notifId) {
+                deleteNotification(notifId);
+            }
+        });
+
+        modalCloseBtn.addEventListener('click', closeModal);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        markAllReadButton.addEventListener('click', markAllAsRead);
+
+        loadMoreButton.addEventListener('click', () => {
+            const newNotifications = generateDummyNotifications(3);
+            // Tambahkan notifikasi baru ke akhir daftar
+            currentNotifications = [...currentNotifications, ...newNotifications];
+            renderNotifications();
+        });
+
+        // Render awal dengan notifikasi awal
+        renderNotifications();
+    </script>
+</body>
+</html>

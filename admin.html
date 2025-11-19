@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&display=swap');
 
@@ -60,342 +61,487 @@
     </div>
 </header>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div id="admin-view" class="pt-4">
-            <h1 class="text-3xl text-gray-800 mb-6 border-b pb-2 font-medium">Admin Dashboard</h1>
+<main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div id="admin-view" class="pt-4">
+        <h1 class="text-3xl text-gray-800 mb-6 border-b pb-2 font-medium">Admin Dashboard</h1>
 
-            <!-- Tab Menu -->
-            <div class="flex border-b mb-6 bg-white rounded-t-xl shadow-sm overflow-hidden">
-                <button class="admin-tab-btn px-4 py-3 text-sm font-medium border-b-2 border-indigo-600 text-indigo-600 transition -mb-px active" onclick="showAdminSubView('manage-ekskul')" id="tab-manage-ekskul">Kelola Ekstra</button>
-                <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('activate-applicants')" id="tab-activate-applicants">Aktivasi Pendaftar</button>
+        <!-- Ringkasan Data -->
+        <div id="dashboard-overview" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
+                <h3 class="text-lg font-semibold">Total Ekstra</h3>
+                <p class="text-3xl font-bold mt-2" id="total-ekstra">0</p>
             </div>
-
-            <!-- Kelola Ekstra -->
-            <div id="manage-ekskul" class="admin-subview">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-xl font-semibold text-gray-700">Daftar Semua Ekstra</h2>
-                    <button onclick="openAddExkulModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition font-medium">
-                        + Tambah Ekskul Baru
-                    </button>
-                </div>
-                <div class="bg-white rounded-xl shadow-lg overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Ekskul</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pendaftar</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="admin-ekskul-table-body" class="bg-white divide-y divide-gray-200"></tbody>
-                    </table>
-                </div>
+            <div class="bg-gradient-to-r from-green-500 to-teal-600 text-white rounded-xl p-6 shadow-lg">
+                <h3 class="text-lg font-semibold">Total Peserta</h3>
+                <p class="text-3xl font-bold mt-2" id="total-peserta">0</p>
             </div>
-
-            <!-- Aktivasi Pendaftar -->
-            <div id="activate-applicants" class="admin-subview hidden">
-                <h2 class="text-xl font-semibold text-gray-700 mb-4">Aktivasi Pendaftar Ekstra</h2>
-                <div class="bg-white p-6 rounded-xl shadow-lg overflow-x-auto">
-                    <p class="text-sm font-medium text-gray-600 mb-3">Daftar pendaftar dengan status <span class="text-yellow-600 font-bold">Menunggu</span> yang menunggu persetujuan Anda.</p>
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-yellow-50">
-                            <tr>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Peserta</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Ekstra</th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody id="applicant-table-body" class="bg-white divide-y divide-gray-200"></tbody>
-                    </table>
-                </div>
+            <div class="bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-xl p-6 shadow-lg">
+                <h3 class="text-lg font-semibold">Pendaftar Menunggu</h3>
+                <p class="text-3xl font-bold mt-2" id="total-pendaftar-baru">0</p>
+            </div>
+            <div class="bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl p-6 shadow-lg">
+                <h3 class="text-lg font-semibold">Sudah Diterima</h3>
+                <p class="text-3xl font-bold mt-2" id="total-diterima">0</p>
             </div>
         </div>
-    </main>
 
-    <!-- Modal Tambah/Edit Ekstra -->
-    <div id="admin-exkul-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
-        <div id="admin-modal-content" class="bg-white rounded-xl w-full max-w-md shadow-2xl p-6 transform transition-all duration-300 scale-95 opacity-0">
-            <h3 id="admin-modal-title" class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Tambah Ekskul Baru</h3>
-            <form id="admin-ekskul-form" onsubmit="event.preventDefault(); saveExkul();">
-                <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Nama Ekskul</label>
-                <input type="text" id="admin-name" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
-                <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Deskripsi</label>
-                <textarea id="admin-description" required rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
-                <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">URL Foto Ekstra</label>
-                <input type="text" id="admin-foto" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="https://...">
+        <!-- Tab Menu -->
+        <div class="flex border-b mb-6 bg-white rounded-t-xl shadow-sm overflow-hidden">
+            <button class="admin-tab-btn px-4 py-3 text-sm font-medium border-b-2 border-indigo-600 text-indigo-600 transition -mb-px active" onclick="showAdminSubView('manage-ekskul')" id="tab-manage-ekskul">Kelola Ekstra</button>
+            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('activate-applicants')" id="tab-activate-applicants">Aktivasi Pendaftar</button>
+            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('manage-peserta')" id="tab-manage-peserta">Kelola Peserta</button>
+            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('notifications')" id="tab-notifications">Notifikasi</button>
+        </div>
 
-                <input type="hidden" id="admin-ekskul-id">
-                
-                <div class="flex justify-end space-x-3 mt-6">
-                    <button type="button" onclick="closeAdminModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium">Batal</button>
-                    <button type="submit" id="admin-submit-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium">Simpan Ekskul</button>
-                </div>
-            </form>
+        <!-- Kelola Ekstra -->
+        <div id="manage-ekskul" class="admin-subview">
+            <!-- Grafik Distribusi -->
+            <div id="chart-section" class="bg-white rounded-xl shadow-lg p-6 mb-8">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Distribusi Pendaftar per Ekstra</h2>
+                <canvas id="chart-ekstra" height="200"></canvas>
+            </div>
+
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-xl font-semibold text-gray-700">Daftar Semua Ekstra</h2>
+                <button onclick="openAddExkulModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition font-medium">
+                    + Tambah Ekskul Baru
+                </button>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Ekskul</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Deskripsi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Foto</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pendaftar</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Diterima</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-ekskul-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Aktivasi Pendaftar -->
+        <div id="activate-applicants" class="admin-subview hidden">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Aktivasi Pendaftar Ekstra</h2>
+            <div class="bg-white p-6 rounded-xl shadow-lg overflow-x-auto">
+                <p class="text-sm font-medium text-gray-600 mb-3">Daftar pendaftar dengan status <span class="text-yellow-600 font-bold">Menunggu</span> yang menunggu persetujuan Anda.</p>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-yellow-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Peserta</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Ekstra</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="applicant-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Kelola Peserta -->
+        <div id="manage-peserta" class="admin-subview hidden">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Kelola Peserta</h2>
+            <div class="bg-white p-6 rounded-xl shadow-lg overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kelas</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">No. HP</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="peserta-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Notifikasi -->
+        <div id="notifications" class="admin-subview hidden">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Notifikasi Sistem</h2>
+            <div class="bg-white p-6 rounded-xl shadow-lg overflow-y-auto max-h-96">
+                <ul id="notification-list" class="space-y-4">
+                    <li class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r-lg">
+                        <strong>Pendaftaran Baru:</strong> Budi Santoso mendaftar ke Pramuka
+                    </li>
+                    <li class="border-l-4 border-green-500 bg-green-50 p-4 rounded-r-lg">
+                        <strong>Ekstra Ditambahkan:</strong> Seni Tari oleh admin
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
+</main>
 
-    <!-- Toast Notification -->
-    <div id="toast-notification" class="fixed bottom-5 right-5 p-4 rounded-lg shadow-xl text-white opacity-0 transition-opacity duration-300" style="z-index: 1000; background-color: #4f46e5;">
-        <span id="toast-message"></span>
+<!-- Modal Tambah/Edit Ekstra -->
+<div id="admin-exkul-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+    <div id="admin-modal-content" class="bg-white rounded-xl w-full max-w-md shadow-2xl p-6 transform transition-all duration-300 scale-95 opacity-0">
+        <h3 id="admin-modal-title" class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Tambah Ekskul Baru</h3>
+        <form id="admin-ekskul-form" onsubmit="event.preventDefault(); saveExkul();">
+            <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Nama Ekskul</label>
+            <input type="text" id="admin-name" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Deskripsi</label>
+            <textarea id="admin-description" required rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">URL Foto Ekstra</label>
+            <input type="text" id="admin-foto" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="https://...">
+
+            <input type="hidden" id="admin-ekskul-id">
+            
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" onclick="closeAdminModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium">Batal</button>
+                <button type="submit" id="admin-submit-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium">Simpan Ekskul</button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
-    <script>
-        let db;
+<!-- Toast Notification -->
+<div id="toast-notification" class="fixed bottom-5 right-5 p-4 rounded-lg shadow-xl text-white opacity-0 transition-opacity duration-300" style="z-index: 1000; background-color: #4f46e5;">
+    <span id="toast-message"></span>
+</div>
 
-        // Inisialisasi database SQLite
-        initSqlJs().then(function(SQL) {
-            const savedDb = localStorage.getItem('db');
-            if (savedDb) {
-                console.log("Memuat database dari localStorage...");
-                const data = JSON.parse(savedDb);
-                const buffer = new Uint8Array(data);
-                db = new SQL.Database(buffer);
-            } else {
-                console.log("Membuat database baru...");
-                db = new SQL.Database();
-            }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
+<script>
+    let db;
 
-            // Buat tabel jika belum ada
-            db.run(`
-                CREATE TABLE IF NOT EXISTS ekstra (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nama TEXT NOT NULL,
-                    deskripsi TEXT,
-                    foto TEXT
-                );
-                CREATE TABLE IF NOT EXISTS peserta (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nama TEXT NOT NULL,
-                    nis TEXT UNIQUE NOT NULL,
-                    kelas TEXT,
-                    no_hp TEXT,
-                    password TEXT NOT NULL
-                );
-                CREATE TABLE IF NOT EXISTS pendaftaran (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    nama_peserta TEXT NOT NULL,
-                    nis_peserta TEXT NOT NULL,
-                    ekstra TEXT NOT NULL,
-                    status TEXT DEFAULT 'menunggu'
-                );
-            `);
+    // Inisialisasi database SQLite
+    initSqlJs().then(function(SQL) {
+        const savedDb = localStorage.getItem('db');
+        if (savedDb) {
+            console.log("Memuat database dari localStorage...");
+            const data = JSON.parse(savedDb);
+            const buffer = new Uint8Array(data);
+            db = new SQL.Database(buffer);
+        } else {
+            console.log("Membuat database baru...");
+            db = new SQL.Database();
+        }
 
-            // Simpan database ke localStorage setiap kali ada perubahan
-            setInterval(() => {
-                const data = db.export();
-                const buffer = new Uint8Array(data);
-                localStorage.setItem('db', JSON.stringify(Array.from(buffer)));
-            }, 1000);
+        // Buat tabel jika belum ada
+        db.run(`
+            CREATE TABLE IF NOT EXISTS ekstra (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nama TEXT NOT NULL,
+                deskripsi TEXT,
+                foto TEXT
+            );
+            CREATE TABLE IF NOT EXISTS peserta (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nama TEXT NOT NULL,
+                nis TEXT UNIQUE NOT NULL,
+                kelas TEXT,
+                no_hp TEXT,
+                password TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS pendaftaran (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nama_peserta TEXT NOT NULL,
+                nis_peserta TEXT NOT NULL,
+                ekstra TEXT NOT NULL,
+                status TEXT DEFAULT 'menunggu'
+            );
+        `);
 
-            console.log("Database SQLite siap!");
+        // Simpan database ke localStorage setiap kali ada perubahan
+        setInterval(() => {
+            const data = db.export();
+            const buffer = new Uint8Array(data);
+            localStorage.setItem('db', JSON.stringify(Array.from(buffer)));
+        }, 1000);
 
-            // Panggil fungsi setelah database siap
-            tampilkanEkstra();
-            tampilkanPendaftar();
-        }).catch(err => {
-            console.error("Gagal memuat SQLite.js:", err);
-            alert("Gagal memuat database. Pastikan kamu membuka file ini lewat web server lokal (misal: Live Server di VS Code).");
+        console.log("Database SQLite siap!");
+
+        // Panggil fungsi setelah database siap
+        tampilkanRingkasan();
+        tampilkanEkstra();
+        tampilkanPendaftar();
+        tampilkanPeserta();
+        tampilkanGrafik();
+    }).catch(err => {
+        console.error("Gagal memuat SQLite.js:", err);
+        alert("Gagal memuat database. Pastikan kamu membuka file ini lewat web server lokal (misal: Live Server di VS Code).");
+    });
+
+    // Fungsi untuk menampilkan ringkasan data
+    function tampilkanRingkasan() {
+        const totalEkstra = db.exec("SELECT COUNT(*) AS total FROM ekstra")[0]?.values[0][0] || 0;
+        const totalPeserta = db.exec("SELECT COUNT(*) AS total FROM peserta")[0]?.values[0][0] || 0;
+        const totalPendaftarBaru = db.exec("SELECT COUNT(*) AS total FROM pendaftaran WHERE status = 'menunggu'")[0]?.values[0][0] || 0;
+        const totalDiterima = db.exec("SELECT COUNT(*) AS total FROM pendaftaran WHERE status = 'diterima'")[0]?.values[0][0] || 0;
+
+        document.getElementById('total-ekstra').textContent = totalEkstra;
+        document.getElementById('total-peserta').textContent = totalPeserta;
+        document.getElementById('total-pendaftar-baru').textContent = totalPendaftarBaru;
+        document.getElementById('total-diterima').textContent = totalDiterima;
+    }
+
+    // Fungsi untuk menampilkan grafik distribusi ekstra
+    function tampilkanGrafik() {
+        const result = db.exec(`
+            SELECT e.nama, 
+                   (SELECT COUNT(*) FROM pendaftaran WHERE ekstra = e.nama AND status = 'diterima') AS jumlah_diterima
+            FROM ekstra e
+        `);
+
+        const labels = [];
+        const data = [];
+
+        result[0]?.values.forEach(row => {
+            labels.push(row[0]);
+            data.push(row[1]);
         });
 
-        // Fungsi untuk menampilkan ekstra di tabel
-        function tampilkanEkstra() {
-            const result = db.exec(`
-                SELECT e.id, e.nama, e.deskripsi, e.foto, 
-                       (SELECT COUNT(*) FROM pendaftaran WHERE ekstra = e.nama) AS jumlah_pendaftar
-                FROM ekstra e
-            `);
-            const tbody = document.getElementById('admin-ekskul-table-body');
-
-            if (result.length === 0 || result[0].values.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Belum ada ekstra.</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = '';
-            result[0].values.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <div class="flex items-center">
-                            <img src="${row[3] || 'https://placehold.co/60x60?text=No+Image'}" class="w-10 h-10 rounded-full object-cover mr-3" />
-                            <span class="font-medium">${row[1]}</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-4 text-sm text-gray-500 max-w-xs truncate">${row[2] || 'Tidak ada deskripsi'}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <a href="${row[3]}" target="_blank" class="text-indigo-600 hover:underline">Lihat</a>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${row[4]} pendaftar</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                        <button class="text-indigo-600 hover:text-indigo-900 mr-3" onclick="openEditExkulModal(${row[0]}, '${row[1]}', '${row[2]}', '${row[3] || ''}')">Edit</button>
-                        <button class="text-red-600 hover:text-red-900" onclick="hapusEkstra(${row[0]}, '${row[1]}')">Hapus</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // Fungsi untuk menampilkan pendaftar di tabel
-        function tampilkanPendaftar() {
-            const result = db.exec(`
-                SELECT p.nama_peserta, p.nis_peserta, p.ekstra, p.status, p.id
-                FROM pendaftaran p
-                WHERE p.status = 'menunggu'
-            `);
-            const tbody = document.getElementById('applicant-table-body');
-
-            if (result.length === 0 || result[0].values.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Tidak ada pendaftar menunggu.</td></tr>';
-                return;
-            }
-
-            tbody.innerHTML = '';
-            result[0].values.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="px-6 py-4 whitespace-nowrap">${row[0]}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${row[1]}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">${row[2]}</td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 rounded-full text-white ${
-                            row[3] === 'diterima' ? 'bg-green-500' :
-                            row[3] === 'ditolak' ? 'bg-red-500' : 'bg-yellow-500'
-                        }">${row[3]}</span>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                        <button class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 mr-2" onclick="setStatus(${row[4]}, 'diterima')">Terima</button>
-                        <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" onclick="setStatus(${row[4]}, 'ditolak')">Tolak</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // Fungsi tambah/edit ekstra
-        function saveExkul() {
-            if (!db) {
-                alert("Database belum siap. Coba refresh halaman.");
-                return;
-            }
-
-            const id = document.getElementById('admin-ekskul-id').value;
-            const nama = document.getElementById('admin-name').value;
-            const deskripsi = document.getElementById('admin-description').value;
-            const foto = document.getElementById('admin-foto').value || 'https://placehold.co/400';
-
-            try {
-                if (id) {
-                    // Update
-                    db.run("UPDATE ekstra SET nama = ?, deskripsi = ?, foto = ? WHERE id = ?", [nama, deskripsi, foto, id]);
-                    showToast('Ekstra berhasil diperbarui!');
-                } else {
-                    // Insert
-                    db.run("INSERT INTO ekstra (nama, deskripsi, foto) VALUES (?, ?, ?)", [nama, deskripsi, foto]);
-                    showToast('Ekstra berhasil ditambahkan!');
+        const ctx = document.getElementById('chart-ekstra').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Jumlah Diterima',
+                    data: data,
+                    backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                    borderColor: 'rgba(79, 70, 229, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true }
                 }
-
-                closeAdminModal();
-                tampilkanEkstra();
-            } catch (e) {
-                console.error("Error saat menyimpan ekstra:", e);
-                alert("Gagal menyimpan ekstra. Cek console untuk detail.");
             }
+        });
+    }
+
+    // Fungsi untuk menampilkan ekstra di tabel
+    function tampilkanEkstra() {
+        const result = db.exec(`
+            SELECT e.id, e.nama, e.deskripsi, e.foto, 
+                   (SELECT COUNT(*) FROM pendaftaran WHERE ekstra = e.nama) AS jumlah_pendaftar,
+                   (SELECT COUNT(*) FROM pendaftaran WHERE ekstra = e.nama AND status = 'diterima') AS jumlah_diterima
+            FROM ekstra e
+        `);
+        const tbody = document.getElementById('admin-ekskul-table-body');
+
+        if (result.length === 0 || result[0].values.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4">Belum ada ekstra.</td></tr>';
+            return;
         }
 
-        // Fungsi hapus ekstra
-        function hapusEkstra(id, nama) {
-            if (confirm(`Yakin ingin menghapus ekstra "${nama}"?`)) {
-                db.run("DELETE FROM ekstra WHERE id = ?", [id]);
-                showToast('Ekstra berhasil dihapus!');
-                tampilkanEkstra();
+        tbody.innerHTML = '';
+        result[0].values.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap">${row[1]}</td>
+                <td class="px-6 py-4 text-sm truncate max-w-xs">${row[2] || 'Tidak ada'}</td>
+                <td class="px-6 py-4"><a href="${row[3]}" target="_blank" class="text-indigo-600 hover:underline">Lihat</a></td>
+                <td class="px-6 py-4 text-sm">${row[4]} pendaftar</td>
+                <td class="px-6 py-4 text-sm">${row[5]} diterima</td>
+                <td class="px-6 py-4 text-center text-sm font-medium">
+                    <button class="text-indigo-600 hover:text-indigo-900 mr-3" onclick="openEditExkulModal(${row[0]}, '${row[1]}', '${row[2]}', '${row[3] || ''}')">Edit</button>
+                    <button class="text-red-600 hover:text-red-900" onclick="hapusEkstra(${row[0]}, '${row[1]}')">Hapus</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Fungsi untuk menampilkan pendaftar di tabel
+    function tampilkanPendaftar() {
+        const result = db.exec(`
+            SELECT p.nama_peserta, p.nis_peserta, p.ekstra, p.status, p.id
+            FROM pendaftaran p
+            WHERE p.status = 'menunggu'
+        `);
+        const tbody = document.getElementById('applicant-table-body');
+
+        if (result.length === 0 || result[0].values.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Tidak ada pendaftar menunggu.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = '';
+        result[0].values.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap">${row[0]}</td>
+                <td class="px-6 py-4 whitespace-nowrap">${row[1]}</td>
+                <td class="px-6 py-4 whitespace-nowrap">${row[2]}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="px-2 py-1 rounded-full text-white ${
+                        row[3] === 'diterima' ? 'bg-green-500' :
+                        row[3] === 'ditolak' ? 'bg-red-500' : 'bg-yellow-500'
+                    }">${row[3]}</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                    <button class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 mr-2" onclick="setStatus(${row[4]}, 'diterima')">Terima</button>
+                    <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" onclick="setStatus(${row[4]}, 'ditolak')">Tolak</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Fungsi untuk menampilkan peserta di tabel
+    function tampilkanPeserta() {
+        const result = db.exec(`SELECT id, nama, nis, kelas, no_hp FROM peserta`);
+        const tbody = document.getElementById('peserta-table-body');
+
+        if (result.length === 0 || result[0].values.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Belum ada peserta.</td></tr>';
+            return;
+        }
+
+        tbody.innerHTML = '';
+        result[0].values.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td class="px-6 py-4">${row[1]}</td>
+                <td class="px-6 py-4">${row[2]}</td>
+                <td class="px-6 py-4">${row[3]}</td>
+                <td class="px-6 py-4">${row[4] || '-'}</td>
+                <td class="px-6 py-4 text-center">
+                    <button class="text-blue-600 hover:text-blue-900 mr-3">Edit</button>
+                    <button class="text-red-600 hover:text-red-900" onclick="hapusPeserta(${row[0]}, '${row[1]}')">Hapus</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    // Fungsi hapus peserta
+    function hapusPeserta(id, nama) {
+        if (confirm(`Yakin ingin menghapus peserta "${nama}"?`)) {
+            db.run("DELETE FROM peserta WHERE id = ?", [id]);
+            showToast('Peserta berhasil dihapus!');
+            tampilkanPeserta();
+            tampilkanRingkasan();
+        }
+    }
+
+    // Fungsi tambah/edit ekstra
+    function saveExkul() {
+        if (!db) {
+            alert("Database belum siap.");
+            return;
+        }
+
+        const id = document.getElementById('admin-ekskul-id').value;
+        const nama = document.getElementById('admin-name').value;
+        const deskripsi = document.getElementById('admin-description').value;
+        const foto = document.getElementById('admin-foto').value || 'https://placehold.co/400';
+
+        try {
+            if (id) {
+                db.run("UPDATE ekstra SET nama = ?, deskripsi = ?, foto = ? WHERE id = ?", [nama, deskripsi, foto, id]);
+                showToast('Ekstra berhasil diperbarui!');
+            } else {
+                db.run("INSERT INTO ekstra (nama, deskripsi, foto) VALUES (?, ?, ?)", [nama, deskripsi, foto]);
+                showToast('Ekstra berhasil ditambahkan!');
             }
-        }
 
-        // Fungsi ubah status pendaftaran
-        function setStatus(id, status) {
-            db.run("UPDATE pendaftaran SET status = ? WHERE id = ?", [status, id]);
-            showToast(`Status pendaftaran diubah menjadi ${status}`);
-            tampilkanPendaftar();
+            closeAdminModal();
+            tampilkanEkstra();
+            tampilkanRingkasan();
+            tampilkanGrafik();
         }
-
-        // Modal functions
-        function openAddExkulModal() {
-            document.getElementById('admin-modal-title').textContent = 'Tambah Ekskul Baru';
-            document.getElementById('admin-ekskul-form').reset();
-            document.getElementById('admin-ekskul-id').value = '';
-            document.getElementById('admin-submit-btn').textContent = 'Simpan Ekskul';
-            // Tampilkan modal
-            document.getElementById('admin-exkul-modal').classList.remove('hidden');
-            document.getElementById('admin-exkul-modal').classList.add('flex');
-            // Tambahkan efek animasi
-            setTimeout(() => {
-                document.getElementById('admin-modal-content').classList.add('scale-100', 'opacity-100');
-            }, 10);
+         catch (e) {
+            console.error("Error:", e);
+            // alert("Gagal menyimpan ekstra.");
         }
+    }
 
-        function openEditExkulModal(id, nama, deskripsi, foto) {
-            document.getElementById('admin-modal-title').textContent = 'Edit Ekskul';
-            document.getElementById('admin-name').value = nama;
-            document.getElementById('admin-description').value = deskripsi;
-            document.getElementById('admin-foto').value = foto;
-            document.getElementById('admin-ekskul-id').value = id;
-            document.getElementById('admin-submit-btn').textContent = 'Update Ekskul';
-            // Tampilkan modal
-            document.getElementById('admin-exkul-modal').classList.remove('hidden');
-            document.getElementById('admin-exkul-modal').classList.add('flex');
-            // Tambahkan efek animasi
-            setTimeout(() => {
-                document.getElementById('admin-modal-content').classList.add('scale-100', 'opacity-100');
-            }, 10);
+    // Fungsi hapus ekstra
+    function hapusEkstra(id, nama) {
+        if (confirm(`Yakin ingin menghapus ekstra "${nama}"?`)) {
+            db.run("DELETE FROM ekstra WHERE id = ?", [id]);
+            showToast('Ekstra berhasil dihapus!');
+            tampilkanEkstra();
+            tampilkanRingkasan();
+            tampilkanGrafik();
         }
+    }
 
-        function closeAdminModal() {
-            // Hapus efek animasi dulu
-            document.getElementById('admin-modal-content').classList.remove('scale-100', 'opacity-100');
-            // Tunggu sebentar agar animasi selesai
-            setTimeout(() => {
-                document.getElementById('admin-exkul-modal').classList.remove('flex');
-                document.getElementById('admin-exkul-modal').classList.add('hidden');
-            }, 200); // Waktu animasi
+    // Fungsi ubah status pendaftaran
+    function setStatus(id, status) {
+        db.run("UPDATE pendaftaran SET status = ? WHERE id = ?", [status, id]);
+        showToast(`Status diubah menjadi ${status}`);
+        tampilkanPendaftar();
+        tampilkanRingkasan();
+        tampilkanGrafik();
+    }
+
+    // Modal functions
+    function openAddExkulModal() {
+        document.getElementById('admin-modal-title').textContent = 'Tambah Ekskul Baru';
+        document.getElementById('admin-ekskul-form').reset();
+        document.getElementById('admin-ekskul-id').value = '';
+        document.getElementById('admin-submit-btn').textContent = 'Simpan Ekskul';
+        document.getElementById('admin-exkul-modal').classList.remove('hidden');
+        setTimeout(() => {
+            document.getElementById('admin-modal-content').classList.add('scale-100', 'opacity-100');
+        }, 10);
+    }
+
+    function openEditExkulModal(id, nama, deskripsi, foto) {
+        document.getElementById('admin-modal-title').textContent = 'Edit Ekskul';
+        document.getElementById('admin-name').value = nama;
+        document.getElementById('admin-description').value = deskripsi;
+        document.getElementById('admin-foto').value = foto;
+        document.getElementById('admin-ekskul-id').value = id;
+        document.getElementById('admin-submit-btn').textContent = 'Update Ekskul';
+        document.getElementById('admin-exkul-modal').classList.remove('hidden');
+        setTimeout(() => {
+            document.getElementById('admin-modal-content').classList.add('scale-100', 'opacity-100');
+        }, 10);
+    }
+
+    function closeAdminModal() {
+        document.getElementById('admin-modal-content').classList.remove('scale-100', 'opacity-100');
+        setTimeout(() => {
+            document.getElementById('admin-exkul-modal').classList.add('hidden');
+        }, 200);
+    }
+
+    // Tab functions
+    function showAdminSubView(viewId) {
+        // Sembunyikan semua subview
+        document.querySelectorAll('.admin-subview').forEach(el => el.classList.add('hidden'));
+        // Hapus active dari semua tab
+        document.querySelectorAll('.admin-tab-btn').forEach(el => el.classList.remove('active'));
+        // Tampilkan view yang dipilih
+        document.getElementById(viewId).classList.remove('hidden');
+        // Tambahkan active ke tab yang dipilih
+        event.target.classList.add('active');
+    }
+
+    // Toast notification
+    function showToast(message) {
+        const toast = document.getElementById('toast-notification');
+        const toastMessage = document.getElementById('toast-message');
+        toastMessage.textContent = message;
+        toast.classList.remove('opacity-0');
+        toast.classList.add('opacity-100');
+
+        setTimeout(() => {
+            toast.classList.remove('opacity-100');
+            toast.classList.add('opacity-0');
+        }, 3000);
+    }
+
+    // Logout
+    function handleLogout() {
+        if (confirm('Yakin ingin logout?')) {
+            window.location.href = 'index.html';
         }
-
-        // Tab functions
-        function showAdminSubView(viewId) {
-            // Sembunyikan semua subview
-            document.querySelectorAll('.admin-subview').forEach(el => el.classList.add('hidden'));
-            // Hapus active dari semua tab
-            document.querySelectorAll('.admin-tab-btn').forEach(el => el.classList.remove('active'));
-            // Tampilkan view yang dipilih
-            document.getElementById(viewId).classList.remove('hidden');
-            // Tambahkan active ke tab yang dipilih
-            event.target.classList.add('active');
-        }
-
-        // Toast notification
-        function showToast(message) {
-            const toast = document.getElementById('toast-notification');
-            const toastMessage = document.getElementById('toast-message');
-            toastMessage.textContent = message;
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100');
-
-            setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0');
-            }, 3000);
-        }
-
-        // Logout
-        function handleLogout() {
-            if (confirm('Yakin ingin logout?')) {
-                window.location.href = 'index.html';
-            }
-        }
-    </script>
+    }
+</script>
 </body>
 </html>
