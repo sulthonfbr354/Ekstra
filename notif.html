@@ -10,7 +10,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
+                        sans: ['Poppins', 'sans-serif'],
                     },
                     colors: {
                         'app-blue': '#4F46E5',
@@ -27,9 +27,10 @@
     </script>
     <style>
         body {
-            font-family: 'poppins', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #F3F4F6;
         }
+
         .location-icon {
             color: #EF4444;
         }
@@ -68,9 +69,14 @@
             <p class="mt-4 text-app-gray-text text-sm sm:text-base">
                 Berikut adalah pengumuman dan informasi terbaru terkait semua kegiatan ekstrakurikuler sekolah.
             </p>
-            <button id="mark-all-read" class="mt-4 text-xs font-medium text-app-blue hover:text-blue-700 transition duration-150">
-                Tandai Semua Sudah Dibaca
-            </button>
+            <div class="flex flex-col sm:flex-row gap-4 mt-4">
+                <button id="refresh-notifications" class="text-xs font-medium text-app-blue hover:text-blue-700 transition duration-150 px-4 py-2 border border-app-blue rounded-lg">
+                    Muat Ulang
+                </button>
+                <button id="mark-all-read" class="text-xs font-medium text-app-blue hover:text-blue-700 transition duration-150 px-4 py-2 border border-app-blue rounded-lg">
+                    Tandai Semua Sudah Dibaca
+                </button>
+            </div>
         </header>
 
         <div id="notifications-container" class="space-y-4">
@@ -125,20 +131,14 @@
         </div>
     </div>
 
+    <!-- Inisialisasi SQLite.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
     <script>
-        // Data awal (tidak dikosongkan)
-        const initialNotifications = [
-            { id: '1', title: 'Latihan Rutin Basket', description: 'Wajib diikuti semua anggota tim. Persiapan untuk turnamen antar sekolah.', location: 'Lapangan Utama', datetime: '2025-11-20 - 15:00', isRead: false },
-            { id: '2', title: 'Pendaftaran Baru Klub Debat', description: 'Terbuka untuk siswa kelas X dan XI. Ambil formulir di sekretariat.', location: 'Ruang OSIS', datetime: '2025-11-25 - Sepanjang hari', isRead: false },
-            { id: '3', title: 'Rapat Anggota Pramuka', description: 'Pembahasan jadwal kegiatan semester depan.', location: 'Bumi Perkemahan', datetime: '2025-11-22 - 14:30', isRead: false }
-        ];
-
-        // Gunakan initialNotifications sebagai data awal
-        let currentNotifications = [...initialNotifications];
-
+        // --- 1. Konfigurasi awal ---
         const notificationsContainer = document.getElementById('notifications-container');
         const markAllReadButton = document.getElementById('mark-all-read');
         const loadMoreButton = document.getElementById('load-more-btn');
+        const refreshButton = document.getElementById('refresh-notifications');
 
         const modal = document.getElementById('notification-modal');
         const modalCloseBtn = document.getElementById('modal-close-btn');
@@ -149,82 +149,115 @@
         const modalLocation = document.getElementById('modal-location');
         const modalMarkReadBtn = document.getElementById('modal-mark-read-btn');
 
-        // Fungsi untuk membuat 3 notifikasi dummy baru
-        function generateDummyNotifications(count = 3) {
-            const baseDate = new Date();
-            const titles = [
-                'Latihan Rutin Basket', 'Pendaftaran Baru Klub Debat', 'Rapat Anggota Pramuka',
-                'Kegiatan Teater Sekolah', 'Workshop Fotografi', 'Pelatihan Musik Tradisional',
-                'Kemah Siswa', 'Lomba Cerdas Cermat', 'Pameran Seni Rupa'
-            ];
-            const descriptions = [
-                'Wajib diikuti semua anggota tim. Persiapan untuk turnamen antar sekolah.',
-                'Terbuka untuk siswa kelas X dan XI. Ambil formulir di sekretariat.',
-                'Pembahasan jadwal kegiatan semester depan.',
-                'Latihan rutin setiap Jumat sore. Semua anggota wajib hadir.',
-                'Pelatihan dasar fotografi dan editing. Bawa kamera masing-masing.',
-                'Belajar alat musik tradisional seperti gamelan dan angklung.',
-                'Kemah selama 2 hari di Bumi Perkemahan. Bawa perlengkapan pribadi.',
-                'Lomba pengetahuan umum antar kelas. Pendaftaran hingga akhir bulan.',
-                'Pameran karya seni siswa. Pembukaan pada tanggal 30 November.'
-            ];
-            const locations = [
-                'Lapangan Utama', 'Ruang OSIS', 'Bumi Perkemahan',
-                'Aula Sekolah', 'Lab Multimedia', 'Ruang Musik',
-                'Bumi Perkemahan', 'Aula Sekolah', 'Galeri Seni'
-            ];
+        // --- 2. Inisialisasi SQLite.js ---
+        let db;
+        let currentNotifications = [];
 
-            const newNotifications = [];
-            for (let i = 0; i < count; i++) {
-                const randomIndex = Math.floor(Math.random() * titles.length);
-                const date = new Date(baseDate.getTime() + (i * 86400000)); // +1 hari per notifikasi
-                const formattedDate = `${date.toISOString().split('T')[0]} - ${10 + i}:${30 + (i * 10)}`
-                newNotifications.push({
-                    id: Date.now() + i,
-                    title: titles[randomIndex],
-                    description: descriptions[randomIndex],
-                    location: locations[randomIndex],
-                    datetime: formattedDate,
-                    isRead: false
-                });
+        initSqlJs().then(function(SQL) {
+            const savedDb = localStorage.getItem('db');
+            if (savedDb) {
+                const data = JSON.parse(savedDb);
+                const buffer = new Uint8Array(data);
+                db = new SQL.Database(buffer);
+            } else {
+                db = new SQL.Database();
             }
-            return newNotifications;
-        }
 
+            // Pastikan tabel notifikasi ada
+            db.run(`
+                CREATE TABLE IF NOT EXISTS notifikasi (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    judul TEXT NOT NULL,
+                    pesan TEXT NOT NULL,
+                    tanggal TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                );
+            `);
+
+            // Fungsi untuk ambil notifikasi dari SQLite dan update UI
+            function loadNotificationsFromDB() {
+                const result = db.exec(`
+                    SELECT judul, pesan, tanggal FROM notifikasi ORDER BY tanggal DESC
+                `);
+
+                currentNotifications = [];
+                if (result.length > 0 && result[0].values.length > 0) {
+                    result[0].values.forEach(row => {
+                        currentNotifications.push({
+                            id: `admin_${row[2]}`,
+                            title: row[0],
+                            description: row[1],
+                            datetime: row[2],
+                            location: "Sekolah",
+                            isRead: false
+                        });
+                    });
+                }
+
+                renderNotifications();
+            }
+
+            // Jalankan saat database siap
+            loadNotificationsFromDB();
+
+        }).catch(err => {
+            console.error("Gagal memuat SQLite.js:", err);
+            currentNotifications = [];
+            renderNotifications();
+        });
+
+        // --- 3. Sinkronisasi lintas tab menggunakan BroadcastChannel ---
+        const channel = new BroadcastChannel('notifications-channel');
+
+        channel.onmessage = function(event) {
+            if (event.data.type === 'NOTIFICATION_ADDED') {
+                if (db) {
+                    loadNotificationsFromDB();
+                }
+            }
+        };
+
+        // --- 4. Render Notifikasi ---
         function renderNotifications() {
             notificationsContainer.innerHTML = '';
 
             if (currentNotifications.length === 0) {
                 notificationsContainer.innerHTML = '<p class="text-center text-app-gray-text py-10">Tidak ada notifikasi baru saat ini.</p>';
-            } else {
-                currentNotifications.forEach((notif, index) => {
-                    const bgColorClass = notif.isRead ? 'bg-app-read-bg' : 'bg-app-unread-bg';
-
-                    const notifCard = document.createElement('div');
-                    notifCard.className = `p-4 sm:p-6 shadow-md hover:shadow-lg transition-shadow duration-300 rounded-xl border border-app-card-border cursor-pointer ${bgColorClass} fade-in-up`;
-                    notifCard.style.animationDelay = `${index * 0.1}s`;
-                    notifCard.setAttribute('data-id', notif.id);
-
-                    notifCard.innerHTML = `
-                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
-                            <h2 class="text-lg font-semibold text-gray-900 mb-2 sm:mb-0">${notif.title}</h2>
-                            <span class="text-xs font-medium px-3 py-1 bg-app-badge-bg text-app-blue rounded-full whitespace-nowrap">${notif.datetime}</span>
-                        </div>
-                        <p class="mt-2 text-sm text-app-gray-text">${notif.description}</p>
-                        <div class="mt-2 flex items-center text-xs text-app-gray-text">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 location-icon mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
-                            </svg>
-                            <span>Lokasi: ${notif.location}</span>
-                        </div>
-                    `;
-
-                    notifCard.addEventListener('click', () => openModal(notif));
-                    notificationsContainer.appendChild(notifCard);
-                });
+                return;
             }
+
+            // Hapus duplikat berdasarkan ID (jika ada)
+            const uniqueNotifications = Array.from(
+                new Map(currentNotifications.map(item => [item.id, item])).values()
+            );
+
+            uniqueNotifications.forEach((notif, index) => {
+                const bgColorClass = notif.isRead ? 'bg-app-read-bg' : 'bg-app-unread-bg';
+
+                const notifCard = document.createElement('div');
+                notifCard.className = `p-4 sm:p-6 shadow-md hover:shadow-lg transition-shadow duration-300 rounded-xl border border-app-card-border cursor-pointer ${bgColorClass} fade-in-up`;
+                notifCard.style.animationDelay = `${index * 0.1}s`;
+                notifCard.setAttribute('data-id', notif.id);
+
+                notifCard.innerHTML = `
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-2 sm:mb-0">${notif.title}</h2>
+                        <span class="text-xs font-medium px-3 py-1 bg-app-badge-bg text-app-blue rounded-full whitespace-nowrap">${notif.datetime}</span>
+                    </div>
+                    <p class="mt-2 text-sm text-app-gray-text">${notif.description}</p>
+                    <div class="mt-2 flex items-center text-xs text-app-gray-text">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 location-icon mr-1" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd" />
+                        </svg>
+                        <span>Lokasi: ${notif.location}</span>
+                    </div>
+                `;
+
+                notifCard.addEventListener('click', () => openModal(notif));
+                notificationsContainer.appendChild(notifCard);
+            });
         }
 
+        // --- 5. Modal ---
         function openModal(notif) {
             modalTitle.textContent = notif.title;
             modalDescription.textContent = notif.description;
@@ -246,9 +279,9 @@
         }
 
         function markAsRead(notifId, status = true) {
-            const notifIndex = currentNotifications.findIndex(n => n.id === notifId);
-            if (notifIndex !== -1) {
-                currentNotifications[notifIndex].isRead = status;
+            const index = currentNotifications.findIndex(n => n.id === notifId);
+            if (index !== -1) {
+                currentNotifications[index].isRead = status;
                 renderNotifications();
             }
         }
@@ -264,7 +297,7 @@
             renderNotifications();
         }
 
-        // Event listeners
+        // --- 6. Event Listeners ---
         modalMarkReadBtn.addEventListener('click', () => {
             const notifId = modalMarkReadBtn.getAttribute('data-notif-id');
             if (notifId && !modalMarkReadBtn.disabled) {
@@ -281,21 +314,34 @@
         });
 
         modalCloseBtn.addEventListener('click', closeModal);
-
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });
 
         markAllReadButton.addEventListener('click', markAllAsRead);
-
-        loadMoreButton.addEventListener('click', () => {
-            const newNotifications = generateDummyNotifications(3);
-            // Tambahkan notifikasi baru ke akhir daftar
-            currentNotifications = [...currentNotifications, ...newNotifications];
-            renderNotifications();
+        refreshButton.addEventListener('click', () => {
+            if (db) loadNotificationsFromDB();
         });
 
-        // Render awal dengan notifikasi awal
+        loadMoreButton.addEventListener('click', () => {
+            // Contoh logika "Lihat Lainnya" jika diperlukan
+            // Misalnya, menambahkan notifikasi dummy dari database
+            // Atau memuat lebih banyak dari database jika ada pagination
+            // Untuk saat ini, tidak ada aksi default jika hanya dari DB
+            alert('Semua notifikasi telah dimuat.');
+        });
+
+        // --- 7. Sinkronisasi lintas tab: Admin Dashboard mengirim notifikasi → ini merespons ---
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'notifications') {
+                // Jika Admin Dashboard menyimpan ke localStorage, halaman ini merespons
+                const saved = JSON.parse(e.newValue || '[]');
+                currentNotifications = [...saved]; // Hanya notifikasi admin sekarang
+                renderNotifications();
+            }
+        });
+
+        // --- 8. Render awal ---
         renderNotifications();
     </script>
 </body>

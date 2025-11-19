@@ -166,7 +166,43 @@
         <!-- Notifikasi -->
         <div id="notifications" class="admin-subview hidden">
             <h2 class="text-xl font-semibold text-gray-700 mb-4">Notifikasi Sistem</h2>
+            
+            <!-- Form Kirim Notifikasi -->
+            <div class="bg-white p-6 rounded-xl shadow-lg mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Kirim Notifikasi Baru</h3>
+                <form id="send-notification-form">
+                    <div class="mb-4">
+                        <label for="notification-title" class="block text-sm font-medium text-gray-700 mb-1">Judul Notifikasi</label>
+                        <input 
+                            type="text" 
+                            id="notification-title" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                            placeholder="Contoh: Jadwal Ekstra Minggu Ini"
+                            required
+                        >
+                    </div>
+                    <div class="mb-4">
+                        <label for="notification-message" class="block text-sm font-medium text-gray-700 mb-1">Pesan</label>
+                        <textarea 
+                            id="notification-message" 
+                            rows="3" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                            placeholder="Contoh: Ekstra Pramuka akan latihan hari Jumat jam 15:00 di lapangan."
+                            required
+                        ></textarea>
+                    </div>
+                    <button 
+                        type="submit" 
+                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition font-medium"
+                    >
+                        Kirim Notifikasi
+                    </button>
+                </form>
+            </div>
+
+            <!-- Daftar Notifikasi Terkirim -->
             <div class="bg-white p-6 rounded-xl shadow-lg overflow-y-auto max-h-96">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Riwayat Notifikasi</h3>
                 <ul id="notification-list" class="space-y-4">
                     <li class="border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r-lg">
                         <strong>Pendaftaran Baru:</strong> Budi Santoso mendaftar ke Pramuka
@@ -247,6 +283,12 @@
                 ekstra TEXT NOT NULL,
                 status TEXT DEFAULT 'menunggu'
             );
+            CREATE TABLE IF NOT EXISTS notifikasi (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                judul TEXT NOT NULL,
+                pesan TEXT NOT NULL,
+                tanggal TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
         `);
 
         // Simpan database ke localStorage setiap kali ada perubahan
@@ -264,6 +306,7 @@
         tampilkanPendaftar();
         tampilkanPeserta();
         tampilkanGrafik();
+        tampilkanNotifikasi();
     }).catch(err => {
         console.error("Gagal memuat SQLite.js:", err);
         alert("Gagal memuat database. Pastikan kamu membuka file ini lewat web server lokal (misal: Live Server di VS Code).");
@@ -305,7 +348,7 @@
                 labels: labels,
                 datasets: [{
                     label: 'Jumlah Diterima',
-                    data: data,
+                     data,
                     backgroundColor: 'rgba(79, 70, 229, 0.6)',
                     borderColor: 'rgba(79, 70, 229, 1)',
                     borderWidth: 1
@@ -416,6 +459,49 @@
         });
     }
 
+    // Fungsi untuk menampilkan notifikasi
+    function tampilkanNotifikasi() {
+        const result = db.exec(`
+            SELECT judul, pesan, tanggal FROM notifikasi ORDER BY tanggal DESC
+        `);
+        const ul = document.getElementById('notification-list');
+
+        if (result.length === 0 || result[0].values.length === 0) {
+            ul.innerHTML = '<li class="text-center py-4 text-gray-500">Belum ada notifikasi.</li>';
+            return;
+        }
+
+        ul.innerHTML = '';
+        result[0].values.forEach(row => {
+            const li = document.createElement('li');
+            li.className = 'border-l-4 border-blue-500 bg-blue-50 p-4 rounded-r-lg';
+            li.innerHTML = `
+                <strong>${row[0]}</strong>: ${row[1]}
+                <div class="text-xs text-gray-500 mt-1">${row[2]}</div>
+            `;
+            ul.appendChild(li);
+        });
+    }
+
+    // Fungsi kirim notifikasi
+    document.getElementById('send-notification-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const judul = document.getElementById('notification-title').value;
+        const pesan = document.getElementById('notification-message').value;
+
+        // Simpan ke database
+        db.run("INSERT INTO notifikasi (judul, pesan) VALUES (?, ?)", [judul, pesan]);
+
+        showToast('Notifikasi berhasil dikirim!');
+        
+        // Reset form
+        document.getElementById('send-notification-form').reset();
+
+        // Update tampilan notifikasi
+        tampilkanNotifikasi();
+    });
+
     // Fungsi hapus peserta
     function hapusPeserta(id, nama) {
         if (confirm(`Yakin ingin menghapus peserta "${nama}"?`)) {
@@ -451,8 +537,7 @@
             tampilkanEkstra();
             tampilkanRingkasan();
             tampilkanGrafik();
-        }
-         catch (e) {
+        } catch (e) {
             console.error("Error:", e);
             // alert("Gagal menyimpan ekstra.");
         }
