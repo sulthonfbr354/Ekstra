@@ -219,8 +219,6 @@
                         `);
 
                         // Tambahkan admin default
-                        db.run("INSERT INTO peserta (nama, nis, kelas, no_hp, password) VALUES (?, ?, ?, ?, ?)", 
-                               ["Admin", "admin", "Admin", "081234567890", "admin123"]);
 
                         console.log("Database SQLite siap (baru)!");
                     });
