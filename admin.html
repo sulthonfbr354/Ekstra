@@ -10,17 +10,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;900&display=swap');
-
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f7f7f7;
         }
-
         .custom-scrollbar::-webkit-scrollbar { width: 8px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background-color: #a0aec0; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background-color: #edf2f7; }
         .modal-overlay { background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); z-index: 999; }
-
         .admin-tab-btn.active {
             border-color: #4f46e5;
             color: #4f46e5;
@@ -32,7 +29,6 @@
     </style>
 </head>
 <body class="antialiased bg-gray-50 min-h-screen">
-
 <!-- Navbar -->
 <header class="bg-white shadow-md sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
@@ -48,7 +44,6 @@
                 SMA Negeri 1 Turen
             </div>
         </div>
-
         <!-- Logout Button -->
         <nav class="flex space-x-6 items-center">
             <button 
@@ -60,11 +55,9 @@
         </nav>
     </div>
 </header>
-
 <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div id="admin-view" class="pt-4">
         <h1 class="text-3xl text-gray-800 mb-6 border-b pb-2 font-medium">Admin Dashboard</h1>
-
         <!-- Ringkasan Data -->
         <div id="dashboard-overview" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
@@ -84,15 +77,15 @@
                 <p class="text-3xl font-bold mt-2" id="total-diterima">0</p>
             </div>
         </div>
-
         <!-- Tab Menu -->
         <div class="flex border-b mb-6 bg-white rounded-t-xl shadow-sm overflow-hidden">
             <button class="admin-tab-btn px-4 py-3 text-sm font-medium border-b-2 border-indigo-600 text-indigo-600 transition -mb-px active" onclick="showAdminSubView('manage-ekskul')" id="tab-manage-ekskul">Kelola Ekstra</button>
             <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('activate-applicants')" id="tab-activate-applicants">Aktivasi Pendaftar</button>
             <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('manage-peserta')" id="tab-manage-peserta">Kelola Peserta</button>
             <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('notifications')" id="tab-notifications">Notifikasi</button>
+            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('manage-nilai')" id="tab-manage-nilai">Penilaian Ekstra</button>
+            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('manage-lomba')" id="tab-manage-lomba">Kelola Lomba</button>
         </div>
-
         <!-- Kelola Ekstra -->
         <div id="manage-ekskul" class="admin-subview">
             <!-- Grafik Distribusi -->
@@ -100,7 +93,6 @@
                 <h2 class="text-xl font-bold text-gray-800 mb-4">Distribusi Pendaftar per Ekstra</h2>
                 <canvas id="chart-ekstra" height="200"></canvas>
             </div>
-
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-semibold text-gray-700">Daftar Semua Ekstra</h2>
                 <button onclick="openAddExkulModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition font-medium">
@@ -123,7 +115,6 @@
                 </table>
             </div>
         </div>
-
         <!-- Aktivasi Pendaftar -->
         <div id="activate-applicants" class="admin-subview hidden">
             <h2 class="text-xl font-semibold text-gray-700 mb-4">Aktivasi Pendaftar Ekstra</h2>
@@ -143,7 +134,6 @@
                 </table>
             </div>
         </div>
-
         <!-- Kelola Peserta -->
         <div id="manage-peserta" class="admin-subview hidden">
             <h2 class="text-xl font-semibold text-gray-700 mb-4">Kelola Peserta</h2>
@@ -162,11 +152,9 @@
                 </table>
             </div>
         </div>
-
         <!-- Notifikasi -->
         <div id="notifications" class="admin-subview hidden">
             <h2 class="text-xl font-semibold text-gray-700 mb-4">Notifikasi Sistem</h2>
-            
             <!-- Form Kirim Notifikasi -->
             <div class="bg-white p-6 rounded-xl shadow-lg mb-6">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Kirim Notifikasi Baru</h3>
@@ -199,7 +187,6 @@
                     </button>
                 </form>
             </div>
-
             <!-- Daftar Notifikasi Terkirim -->
             <div class="bg-white p-6 rounded-xl shadow-lg overflow-y-auto max-h-96">
                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Riwayat Notifikasi</h3>
@@ -213,9 +200,65 @@
                 </ul>
             </div>
         </div>
+        <!-- Penilaian Ekstra -->
+        <div id="manage-nilai" class="admin-subview hidden">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Kelola Penilaian Ekstra</h2>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <div class="mb-4">
+                    <label for="nilai-ekstra-select" class="block text-sm font-medium text-gray-700 mb-1">Pilih Ekstra</label>
+                    <select id="nilai-ekstra-select" class="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">-- Pilih Ekstra --</option>
+                        <!-- Opsi akan diisi oleh JavaScript -->
+                    </select>
+                </div>
+                <div id="nilai-peserta-container" class="hidden">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3">Daftar Peserta Aktif</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIS</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nilai Angka</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nilai Huruf</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Komentar</th>
+                                    <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="nilai-peserta-table-body" class="bg-white divide-y divide-gray-200">
+                                <!-- Isi tabel akan diisi oleh JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="manage-lomba" class="admin-subview hidden">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Kelola Lomba & Acara</h2>
+            <div class="mb-4">
+                <button onclick="openAddLombaModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition font-medium">
+                    + Tambah Lomba Baru
+                </button>
+            </div>
+            <div class="bg-white rounded-xl shadow-lg overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Lomba</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ekstra Terkait</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Mulai</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal Selesai</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-lomba-table-body" class="bg-white divide-y divide-gray-200"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </main>
-
 <!-- Modal Tambah/Edit Ekstra -->
 <div id="admin-exkul-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
     <div id="admin-modal-content" class="bg-white rounded-xl w-full max-w-md shadow-2xl p-6 transform transition-all duration-300 scale-95 opacity-0">
@@ -227,9 +270,7 @@
             <textarea id="admin-description" required rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
             <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">URL Foto Ekstra</label>
             <input type="text" id="admin-foto" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="https://...">
-
             <input type="hidden" id="admin-ekskul-id">
-            
             <div class="flex justify-end space-x-3 mt-6">
                 <button type="button" onclick="closeAdminModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium">Batal</button>
                 <button type="submit" id="admin-submit-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium">Simpan Ekskul</button>
@@ -237,16 +278,55 @@
         </form>
     </div>
 </div>
-
+<div id="admin-lomba-modal" class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center p-4 hidden z-50">
+    <div id="admin-lomba-modal-content" class="bg-white rounded-xl w-full max-w-md shadow-2xl p-6 transform transition-all duration-300 scale-95 opacity-0">
+        <h3 id="admin-lomba-modal-title" class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Tambah Lomba Baru</h3>
+        <form id="admin-lomba-form" onsubmit="event.preventDefault(); saveLomba();">
+            <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Nama Lomba</label>
+            <input type="text" id="admin-lomba-name" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Jenis</label>
+            <select id="admin-lomba-jenis" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="Kompetisi">Kompetisi</option>
+                <option value="Festival">Festival</option>
+                <option value="Pameran">Pameran</option>
+                <option value="Lainnya">Lainnya</option>
+            </select>
+            <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Deskripsi</label>
+            <textarea id="admin-lomba-description" rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Tanggal Mulai</label>
+            <input type="date" id="admin-lomba-tanggal-mulai" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Tanggal Selesai</label>
+            <input type="date" id="admin-lomba-tanggal-selesai" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Link Pendaftaran</label>
+            <input type="url" id="admin-lomba-link" placeholder="https://..." class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Ekstra Terkait</label>
+            <select id="admin-lomba-ekstra" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="">-- Pilih Ekstra --</option>
+                <!-- Opsi akan diisi oleh JavaScript -->
+            </select>
+            <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Status</label>
+            <select id="admin-lomba-status" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+                <option value="aktif">Aktif</option>
+                <option value="selesai">Selesai</option>
+                <option value="dibatalkan">Dibatalkan</option>
+            </select>
+            <input type="hidden" id="admin-lomba-id">
+            <div class="flex justify-end space-x-3 mt-6">
+                <button type="button" onclick="closeAdminLombaModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium">Batal</button>
+                <button type="submit" id="admin-lomba-submit-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium">Simpan Lomba</button>
+            </div>
+        </form>
+    </div>
+</div>
 <!-- Toast Notification -->
 <div id="toast-notification" class="fixed bottom-5 right-5 p-4 rounded-lg shadow-xl text-white opacity-0 transition-opacity duration-300" style="z-index: 1000; background-color: #4f46e5;">
     <span id="toast-message"></span>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
 <script>
+    // util: escape single quote untuk query SELECT yang menggunakan template string
+    function esc(s) { return (s === null || s === undefined) ? '' : String(s).replace(/'/g, "''"); }
     let db;
-
     // Inisialisasi database SQLite
     initSqlJs().then(function(SQL) {
         const savedDb = localStorage.getItem('db');
@@ -259,7 +339,6 @@
             console.log("Membuat database baru...");
             db = new SQL.Database();
         }
-
         // Buat tabel jika belum ada
         db.run(`
             CREATE TABLE IF NOT EXISTS ekstra (
@@ -289,17 +368,38 @@
                 pesan TEXT NOT NULL,
                 tanggal TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
+                CREATE TABLE IF NOT EXISTS nilai (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nis_peserta TEXT NOT NULL,
+                ekstra TEXT NOT NULL,
+                nilai_angka DECIMAL(4,2),
+                nilai_huruf CHAR(2),
+                komentar TEXT,
+                nama_guru TEXT,
+                tanggal_dinilai DATETIME DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (nis_peserta) REFERENCES peserta(nis),
+                FOREIGN KEY (ekstra) REFERENCES ekstra(nama)
+            );
+                CREATE TABLE IF NOT EXISTS lomba (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nama TEXT NOT NULL,
+                jenis TEXT, -- Misalnya: Kompetisi, Festival, dll
+                deskripsi TEXT,
+                tanggal_mulai DATE,
+                tanggal_selesai DATE,
+                link_pendaftaran TEXT,
+                ekstra_terkait TEXT, -- Nama ekstra yang mengikuti
+                status TEXT DEFAULT 'aktif', -- Misalnya: aktif, selesai, dibatalkan
+                tanggal_dibuat TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
         `);
-
         // Simpan database ke localStorage setiap kali ada perubahan
         setInterval(() => {
             const data = db.export();
             const buffer = new Uint8Array(data);
             localStorage.setItem('db', JSON.stringify(Array.from(buffer)));
         }, 1000);
-
         console.log("Database SQLite siap!");
-
         // Panggil fungsi setelah database siap
         tampilkanRingkasan();
         tampilkanEkstra();
@@ -307,24 +407,24 @@
         tampilkanPeserta();
         tampilkanGrafik();
         tampilkanNotifikasi();
+        populateEkstraDropdown();
+        populateLombaEkstraDropdown(); // Tambahkan baris ini
+        tampilkanLomba(); // Tambahkan baris ini agar tabel lomba langsung muncul
     }).catch(err => {
         console.error("Gagal memuat SQLite.js:", err);
         alert("Gagal memuat database. Pastikan kamu membuka file ini lewat web server lokal (misal: Live Server di VS Code).");
     });
-
     // Fungsi untuk menampilkan ringkasan data
     function tampilkanRingkasan() {
         const totalEkstra = db.exec("SELECT COUNT(*) AS total FROM ekstra")[0]?.values[0][0] || 0;
         const totalPeserta = db.exec("SELECT COUNT(*) AS total FROM peserta")[0]?.values[0][0] || 0;
         const totalPendaftarBaru = db.exec("SELECT COUNT(*) AS total FROM pendaftaran WHERE status = 'menunggu'")[0]?.values[0][0] || 0;
         const totalDiterima = db.exec("SELECT COUNT(*) AS total FROM pendaftaran WHERE status = 'diterima'")[0]?.values[0][0] || 0;
-
         document.getElementById('total-ekstra').textContent = totalEkstra;
         document.getElementById('total-peserta').textContent = totalPeserta;
         document.getElementById('total-pendaftar-baru').textContent = totalPendaftarBaru;
         document.getElementById('total-diterima').textContent = totalDiterima;
     }
-
     // Fungsi untuk menampilkan grafik distribusi ekstra
     function tampilkanGrafik() {
         const result = db.exec(`
@@ -332,15 +432,12 @@
                    (SELECT COUNT(*) FROM pendaftaran WHERE ekstra = e.nama AND status = 'diterima') AS jumlah_diterima
             FROM ekstra e
         `);
-
         const labels = [];
         const data = [];
-
         result[0]?.values.forEach(row => {
             labels.push(row[0]);
             data.push(row[1]);
         });
-
         const ctx = document.getElementById('chart-ekstra').getContext('2d');
         new Chart(ctx, {
             type: 'bar',
@@ -362,7 +459,6 @@
             }
         });
     }
-
     // Fungsi untuk menampilkan ekstra di tabel
     function tampilkanEkstra() {
         const result = db.exec(`
@@ -372,12 +468,10 @@
             FROM ekstra e
         `);
         const tbody = document.getElementById('admin-ekskul-table-body');
-
         if (result.length === 0 || result[0].values.length === 0) {
             tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4">Belum ada ekstra.</td></tr>';
             return;
         }
-
         tbody.innerHTML = '';
         result[0].values.forEach(row => {
             const tr = document.createElement('tr');
@@ -395,7 +489,6 @@
             tbody.appendChild(tr);
         });
     }
-
     // Fungsi untuk menampilkan pendaftar di tabel
     function tampilkanPendaftar() {
         const result = db.exec(`
@@ -404,12 +497,10 @@
             WHERE p.status = 'menunggu'
         `);
         const tbody = document.getElementById('applicant-table-body');
-
         if (result.length === 0 || result[0].values.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Tidak ada pendaftar menunggu.</td></tr>';
             return;
         }
-
         tbody.innerHTML = '';
         result[0].values.forEach(row => {
             const tr = document.createElement('tr');
@@ -431,17 +522,14 @@
             tbody.appendChild(tr);
         });
     }
-
     // Fungsi untuk menampilkan peserta di tabel
     function tampilkanPeserta() {
         const result = db.exec(`SELECT id, nama, nis, kelas, no_hp FROM peserta`);
         const tbody = document.getElementById('peserta-table-body');
-
         if (result.length === 0 || result[0].values.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Belum ada peserta.</td></tr>';
             return;
         }
-
         tbody.innerHTML = '';
         result[0].values.forEach(row => {
             const tr = document.createElement('tr');
@@ -458,19 +546,16 @@
             tbody.appendChild(tr);
         });
     }
-
     // Fungsi untuk menampilkan notifikasi
     function tampilkanNotifikasi() {
         const result = db.exec(`
             SELECT judul, pesan, tanggal FROM notifikasi ORDER BY tanggal DESC
         `);
         const ul = document.getElementById('notification-list');
-
         if (result.length === 0 || result[0].values.length === 0) {
             ul.innerHTML = '<li class="text-center py-4 text-gray-500">Belum ada notifikasi.</li>';
             return;
         }
-
         ul.innerHTML = '';
         result[0].values.forEach(row => {
             const li = document.createElement('li');
@@ -482,26 +567,19 @@
             ul.appendChild(li);
         });
     }
-
     // Fungsi kirim notifikasi
     document.getElementById('send-notification-form').addEventListener('submit', function(e) {
         e.preventDefault();
-
         const judul = document.getElementById('notification-title').value;
         const pesan = document.getElementById('notification-message').value;
-
         // Simpan ke database
         db.run("INSERT INTO notifikasi (judul, pesan) VALUES (?, ?)", [judul, pesan]);
-
         showToast('Notifikasi berhasil dikirim!');
-        
         // Reset form
         document.getElementById('send-notification-form').reset();
-
         // Update tampilan notifikasi
         tampilkanNotifikasi();
     });
-
     // Fungsi hapus peserta
     function hapusPeserta(id, nama) {
         if (confirm(`Yakin ingin menghapus peserta "${nama}"?`)) {
@@ -511,19 +589,16 @@
             tampilkanRingkasan();
         }
     }
-
     // Fungsi tambah/edit ekstra
     function saveExkul() {
         if (!db) {
             alert("Database belum siap.");
             return;
         }
-
         const id = document.getElementById('admin-ekskul-id').value;
         const nama = document.getElementById('admin-name').value;
         const deskripsi = document.getElementById('admin-description').value;
         const foto = document.getElementById('admin-foto').value || 'https://placehold.co/400';
-
         try {
             if (id) {
                 db.run("UPDATE ekstra SET nama = ?, deskripsi = ?, foto = ? WHERE id = ?", [nama, deskripsi, foto, id]);
@@ -532,7 +607,6 @@
                 db.run("INSERT INTO ekstra (nama, deskripsi, foto) VALUES (?, ?, ?)", [nama, deskripsi, foto]);
                 showToast('Ekstra berhasil ditambahkan!');
             }
-
             closeAdminModal();
             tampilkanEkstra();
             tampilkanRingkasan();
@@ -542,7 +616,6 @@
             // alert("Gagal menyimpan ekstra.");
         }
     }
-
     // Fungsi hapus ekstra
     function hapusEkstra(id, nama) {
         if (confirm(`Yakin ingin menghapus ekstra "${nama}"?`)) {
@@ -553,7 +626,6 @@
             tampilkanGrafik();
         }
     }
-
     // Fungsi ubah status pendaftaran
     function setStatus(id, status) {
         db.run("UPDATE pendaftaran SET status = ? WHERE id = ?", [status, id]);
@@ -562,7 +634,6 @@
         tampilkanRingkasan();
         tampilkanGrafik();
     }
-
     // Modal functions
     function openAddExkulModal() {
         document.getElementById('admin-modal-title').textContent = 'Tambah Ekskul Baru';
@@ -574,7 +645,6 @@
             document.getElementById('admin-modal-content').classList.add('scale-100', 'opacity-100');
         }, 10);
     }
-
     function openEditExkulModal(id, nama, deskripsi, foto) {
         document.getElementById('admin-modal-title').textContent = 'Edit Ekskul';
         document.getElementById('admin-name').value = nama;
@@ -587,14 +657,12 @@
             document.getElementById('admin-modal-content').classList.add('scale-100', 'opacity-100');
         }, 10);
     }
-
     function closeAdminModal() {
         document.getElementById('admin-modal-content').classList.remove('scale-100', 'opacity-100');
         setTimeout(() => {
             document.getElementById('admin-exkul-modal').classList.add('hidden');
         }, 200);
     }
-
     // Tab functions
     function showAdminSubView(viewId) {
         // Sembunyikan semua subview
@@ -606,7 +674,6 @@
         // Tambahkan active ke tab yang dipilih
         event.target.classList.add('active');
     }
-
     // Toast notification
     function showToast(message) {
         const toast = document.getElementById('toast-notification');
@@ -614,19 +681,243 @@
         toastMessage.textContent = message;
         toast.classList.remove('opacity-0');
         toast.classList.add('opacity-100');
-
         setTimeout(() => {
             toast.classList.remove('opacity-100');
             toast.classList.add('opacity-0');
         }, 3000);
     }
-
     // Logout
     function handleLogout() {
         if (confirm('Yakin ingin logout?')) {
             window.location.href = 'index.html';
         }
     }
+    // Fungsi untuk menampilkan daftar ekstra di dropdown penilaian
+function populateEkstraDropdown() {
+    const result = db.exec("SELECT nama FROM ekstra ORDER BY nama ASC");
+    const select = document.getElementById('nilai-ekstra-select');
+    select.innerHTML = '<option value="">-- Pilih Ekstra --</option>';
+    result[0]?.values.forEach(row => {
+        const option = document.createElement('option');
+        option.value = row[0];
+        option.textContent = row[0];
+        select.appendChild(option);
+    });
+}
+// Fungsi untuk menampilkan daftar peserta aktif dari suatu ekstra beserta nilai mereka
+function tampilkanPesertaUntukPenilaian(namaEkstra) {
+    const result = db.exec(`
+        SELECT p.nama, p.nis, n.nilai_angka, n.nilai_huruf, n.komentar, n.id
+        FROM pendaftaran pr
+        JOIN peserta p ON pr.nis_peserta = p.nis
+        LEFT JOIN nilai n ON p.nis = n.nis_peserta AND n.ekstra = pr.ekstra
+        WHERE pr.ekstra = ? AND pr.status = 'diterima'
+    `, [namaEkstra]);
+    const tbody = document.getElementById('nilai-peserta-table-body');
+    const container = document.getElementById('nilai-peserta-container');
+    if (result.length === 0 || result[0].values.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4">Tidak ada peserta aktif untuk ekstra ini.</td></tr>';
+        container.classList.add('hidden');
+        return;
+    }
+    container.classList.remove('hidden');
+    tbody.innerHTML = '';
+    result[0].values.forEach(row => {
+        const id_nilai = row[5]; // id dari tabel nilai, bisa null
+        const nis = row[1];
+        const nama = row[0];
+        const nilaiAngka = row[2] || '';
+        const nilaiHuruf = row[3] || '';
+        const komentar = row[4] || '';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap">${nama}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${nis}</td>
+            <td class="px-6 py-4 whitespace-nowrap"><input type="number" step="0.01" min="0" max="100" value="${nilaiAngka}" class="nilai-angka-input w-24 px-2 py-1 border border-gray-300 rounded" data-nis="${nis}" data-ekstra="${namaEkstra}"></td>
+            <td class="px-6 py-4 whitespace-nowrap"><input type="text" maxlength="2" value="${nilaiHuruf}" class="nilai-huruf-input w-16 px-2 py-1 border border-gray-300 rounded" data-nis="${nis}" data-ekstra="${namaEkstra}"></td>
+            <td class="px-6 py-4"><input type="text" value="${komentar}" class="komentar-input w-full px-2 py-1 border border-gray-300 rounded" data-nis="${nis}" data-ekstra="${namaEkstra}"></td>
+            <td class="px-6 py-4 whitespace-nowrap text-center">
+                <button class="save-nilai-btn px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700" data-nis="${nis}" data-ekstra="${namaEkstra}" data-id="${id_nilai}">Simpan</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+    // Tambahkan event listener untuk tombol simpan
+    document.querySelectorAll('.save-nilai-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const nis = this.getAttribute('data-nis');
+            const ekstra = this.getAttribute('data-ekstra');
+            const id_nilai = this.getAttribute('data-id'); // Bisa null jika belum pernah disimpan
+            const nilaiAngkaInput = document.querySelector(`.nilai-angka-input[data-nis="${nis}"][data-ekstra="${ekstra}"]`);
+            const nilaiHurufInput = document.querySelector(`.nilai-huruf-input[data-nis="${nis}"][data-ekstra="${ekstra}"]`);
+            const komentarInput = document.querySelector(`.komentar-input[data-nis="${nis}"][data-ekstra="${ekstra}"]`);
+            const nilaiAngka = parseFloat(nilaiAngkaInput.value) || null;
+            const nilaiHuruf = nilaiHurufInput.value.trim() || null;
+            const komentar = komentarInput.value.trim() || null;
+            simpanNilai(nis, ekstra, nilaiAngka, nilaiHuruf, komentar, 'Admin'); // Ganti 'Admin' dengan nama guru jika ada
+        });
+    });
+}
+// Fungsi untuk menyimpan/memperbarui nilai
+function simpanNilai(nis, namaEkstra, nilaiAngka, nilaiHuruf, komentar, namaGuru) {
+    try {
+        // Cek apakah entri nilai sudah ada
+        const existing = db.exec(`
+            SELECT id FROM nilai WHERE nis_peserta = ? AND ekstra = ?
+        `, [esc(nis), esc(namaEkstra)]);
+        if (existing.length > 0 && existing[0].values.length > 0) {
+            // Update jika sudah ada
+            db.run(`
+                UPDATE nilai
+                SET nilai_angka = ?, nilai_huruf = ?, komentar = ?, nama_guru = ?, tanggal_dinilai = CURRENT_TIMESTAMP
+                WHERE nis_peserta = ? AND ekstra = ?
+            `, [nilaiAngka, nilaiHuruf, esc(komentar), esc(namaGuru), esc(nis), esc(namaEkstra)]);
+            showToast('Nilai berhasil diperbarui.');
+        } else {
+            // Insert jika belum ada
+            db.run(`
+                INSERT INTO nilai (nis_peserta, ekstra, nilai_angka, nilai_huruf, komentar, nama_guru)
+                VALUES (?, ?, ?, ?, ?, ?)
+            `, [esc(nis), esc(namaEkstra), nilaiAngka, nilaiHuruf, esc(komentar), esc(namaGuru)]);
+            showToast('Nilai berhasil disimpan.');
+        }
+    } catch (e) {
+        console.error('Gagal menyimpan nilai:', e);
+        showToast('Gagal menyimpan nilai.');
+    }
+}
+// Event listener untuk dropdown ekstra
+document.getElementById('nilai-ekstra-select').addEventListener('change', function() {
+    const selectedEkstra = this.value;
+    if (selectedEkstra) {
+        tampilkanPesertaUntukPenilaian(selectedEkstra);
+    } else {
+        document.getElementById('nilai-peserta-container').classList.add('hidden');
+    }
+});
+// --- Fungsi untuk Tab Lomba ---
+function populateLombaEkstraDropdown() {
+    const result = db.exec("SELECT nama FROM ekstra ORDER BY nama ASC");
+    const select = document.getElementById('admin-lomba-ekstra');
+    select.innerHTML = '<option value="">-- Pilih Ekstra --</option>';
+    result[0]?.values.forEach(row => {
+        const option = document.createElement('option');
+        option.value = row[0];
+        option.textContent = row[0];
+        select.appendChild(option);
+    });
+}
+function tampilkanLomba() {
+    const result = db.exec(`
+        SELECT id, nama, jenis, ekstra_terkait, tanggal_mulai, tanggal_selesai, status
+        FROM lomba
+        ORDER BY tanggal_mulai DESC
+    `);
+    const tbody = document.getElementById('admin-lomba-table-body');
+    if (result.length === 0 || result[0].values.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">Belum ada lomba.</td></tr>';
+        return;
+    }
+    tbody.innerHTML = '';
+    result[0].values.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="px-6 py-4 whitespace-nowrap">${row[1]}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${row[2]}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${row[3] || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${row[4] || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap">${row[5] || '-'}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 py-1 rounded-full text-white ${
+                    row[6] === 'aktif' ? 'bg-green-500' : row[6] === 'selesai' ? 'bg-gray-500' : 'bg-red-500'
+                }">${row[6]}</span>
+            </td>
+            <td class="px-6 py-4 text-center text-sm font-medium">
+                <button class="text-indigo-600 hover:text-indigo-900 mr-3" onclick="openEditLombaModal(${row[0]}, '${row[1]}', '${row[2]}', '${row[3] || ''}', '${row[4] || ''}', '${row[5] || ''}', '${row[6]}', '${(result[0].values.find(r => r[0] === row[0])?.[7] || '').replace(/'/g, "\\'")}', '${(result[0].values.find(r => r[0] === row[0])?.[8] || '').replace(/'/g, "\\'")}')">Edit</button>
+                <button class="text-red-600 hover:text-red-900" onclick="hapusLomba(${row[0]}, '${row[1].replace(/'/g, "\\'")}')">Hapus</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+function openAddLombaModal() {
+    document.getElementById('admin-lomba-modal-title').textContent = 'Tambah Lomba Baru';
+    document.getElementById('admin-lomba-form').reset();
+    document.getElementById('admin-lomba-id').value = '';
+    document.getElementById('admin-lomba-submit-btn').textContent = 'Simpan Lomba';
+    document.getElementById('admin-lomba-modal').classList.remove('hidden');
+    setTimeout(() => {
+        document.getElementById('admin-lomba-modal-content').classList.add('scale-100', 'opacity-100');
+    }, 10);
+}
+function openEditLombaModal(id, nama, jenis, ekstra, tglMulai, tglSelesai, status, deskripsi, link) {
+    document.getElementById('admin-lomba-modal-title').textContent = 'Edit Lomba';
+    document.getElementById('admin-lomba-name').value = nama;
+    document.getElementById('admin-lomba-jenis').value = jenis;
+    document.getElementById('admin-lomba-description').value = deskripsi || '';
+    document.getElementById('admin-lomba-tanggal-mulai').value = tglMulai || '';
+    document.getElementById('admin-lomba-tanggal-selesai').value = tglSelesai || '';
+    document.getElementById('admin-lomba-link').value = link || '';
+    document.getElementById('admin-lomba-ekstra').value = ekstra || '';
+    document.getElementById('admin-lomba-status').value = status;
+    document.getElementById('admin-lomba-id').value = id;
+    document.getElementById('admin-lomba-submit-btn').textContent = 'Update Lomba';
+    document.getElementById('admin-lomba-modal').classList.remove('hidden');
+    setTimeout(() => {
+        document.getElementById('admin-lomba-modal-content').classList.add('scale-100', 'opacity-100');
+    }, 10);
+}
+function closeAdminLombaModal() {
+    document.getElementById('admin-lomba-modal-content').classList.remove('scale-100', 'opacity-100');
+    setTimeout(() => {
+        document.getElementById('admin-lomba-modal').classList.add('hidden');
+    }, 200);
+}
+function saveLomba() {
+    if (!db) {
+        alert("Database belum siap.");
+        return;
+    }
+    const id = document.getElementById('admin-lomba-id').value;
+    const nama = document.getElementById('admin-lomba-name').value;
+    const jenis = document.getElementById('admin-lomba-jenis').value;
+    const deskripsi = document.getElementById('admin-lomba-description').value;
+    const tglMulai = document.getElementById('admin-lomba-tanggal-mulai').value;
+    const tglSelesai = document.getElementById('admin-lomba-tanggal-selesai').value;
+    const link = document.getElementById('admin-lomba-link').value;
+    const ekstra = document.getElementById('admin-lomba-ekstra').value;
+    const status = document.getElementById('admin-lomba-status').value;
+    try {
+        if (id) {
+            db.run(`
+                UPDATE lomba SET nama = ?, jenis = ?, deskripsi = ?, tanggal_mulai = ?, tanggal_selesai = ?, link_pendaftaran = ?, ekstra_terkait = ?, status = ?
+                WHERE id = ?
+            `, [nama, jenis, deskripsi, tglMulai, tglSelesai, link, ekstra, status, id]);
+            showToast('Lomba berhasil diperbarui!');
+        } else {
+            db.run(`
+                INSERT INTO lomba (nama, jenis, deskripsi, tanggal_mulai, tanggal_selesai, link_pendaftaran, ekstra_terkait, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            `, [nama, jenis, deskripsi, tglMulai, tglSelesai, link, ekstra, status]);
+            showToast('Lomba berhasil ditambahkan!');
+        }
+        closeAdminLombaModal();
+        tampilkanLomba(); // Tambahkan baris ini agar tabel diperbarui setelah simpan
+    } catch (e) {
+        console.error("Error menyimpan lomba:", e);
+        showToast('Gagal menyimpan lomba.');
+    }
+}
+function hapusLomba(id, nama) {
+    if (confirm(`Yakin ingin menghapus lomba "${nama}"?`)) {
+        db.run("DELETE FROM lomba WHERE id = ?", [id]);
+        showToast('Lomba berhasil dihapus!');
+        tampilkanLomba(); // Tambahkan baris ini agar tabel diperbarui setelah hapus
+    }
+}
+// Panggil fungsi populate setelah database siap (dalam initSqlJs.then)
+// Tambahkan ini di akhir fungsi callback initSqlJs, setelah populateEkstraDropdown();
+// populateLombaEkstraDropdown(); // <-- Tambahkan baris ini
 </script>
 </body>
 </html>

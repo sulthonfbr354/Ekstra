@@ -113,22 +113,7 @@
             <div id="tab-lomba" data-tab-content class="hidden">
                 <h2 class="text-2xl font-semibold text-gray-700 mb-4">Lomba & Acara Mendatang</h2>
                 <div id="lomba-list" class="space-y-6">
-                    <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col md:flex-row items-start">
-                        <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
-                            <div class="w-24 h-24 bg-red-100 rounded-lg flex flex-col items-center justify-center">
-                                <span class="text-4xl font-bold text-red-600">25</span>
-                                <span class="text-lg font-semibold text-red-500 -mt-1">DES</span>
-                            </div>
-                        </div>
-                        <div class="flex-grow">
-                            <span class="inline-block bg-red-100 text-red-800 text-xs font-semibold px-2 py-1 rounded-full mb-2 uppercase">Kompetisi</span>
-                            <h3 class="text-xl font-bold text-gray-900">Kompetisi Ekstra</h3>
-                            <p class="text-gray-600 mb-4">Informasi lomba akan diumumkan pembina.</p>
-                        </div>
-                        <div class="flex-shrink-0 mt-4 md:mt-0 md:ml-6">
-                            <button onclick="openModal('Info Lomba', 'Detail pendaftaran akan diumumkan.')" class="inline-block bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md">Info Lanjut</button>
-                        </div>
-                    </div>
+                    <!-- Isi tabel lomba akan diisi oleh JavaScript -->
                 </div>
             </div>
         </div>
@@ -218,6 +203,18 @@
                         kelas TEXT,
                         no_hp TEXT,
                         password TEXT NOT NULL
+                    );
+                    CREATE TABLE lomba (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        nama TEXT NOT NULL,
+                        jenis TEXT, -- Misalnya: Kompetisi, Festival, dll
+                        deskripsi TEXT,
+                        tanggal_mulai DATE,
+                        tanggal_selesai DATE,
+                        link_pendaftaran TEXT,
+                        ekstra_terkait TEXT, -- Nama ekstra yang mengikuti
+                        status TEXT DEFAULT 'aktif', -- Misalnya: aktif, selesai, dibatalkan
+                        tanggal_dibuat TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                     );
                 `);
             } else {
@@ -400,19 +397,102 @@
             document.querySelector('[data-extra-lokasi]').textContent = r[3] || '-';
             document.querySelector('[data-extra-pembina]').textContent = r[4] || '-';
 
-            // isi nilai contoh dan sertifikat (placeholder)
-            document.querySelector('[data-nilai-extra-nama]').textContent = r[0] || namaEkstra;
-            // contoh nilai statis, bisa diganti dengan tabel nilai nanti
-            document.getElementById('nilai-angka').textContent = 'A-';
-            document.getElementById('nilai-komentar').textContent = '"Kinerja baik. Tingkatkan konsistensi latihan."';
-            document.getElementById('nilai-guru').textContent = '- ' + (r[4] || 'Pembina');
+            // --- BARU: Ambil data nilai dari tabel 'nilai' ---
+            const nilaiQ = db.exec(`
+                SELECT nilai_angka, nilai_huruf, komentar, nama_guru
+                FROM nilai
+                WHERE nis_peserta = '${esc(currentUser.nis)}' AND ekstra = '${esc(namaEkstra)}'
+                ORDER BY tanggal_dinilai DESC
+                LIMIT 1
+            `);
+
+            if (nilaiQ.length > 0 && nilaiQ[0].values.length > 0) {
+                const nilaiRow = nilaiQ[0].values[0];
+                document.querySelector('[data-nilai-extra-nama]').textContent = r[0] || namaEkstra;
+                // Tampilkan nilai angka jika ada, jika tidak tampilkan nilai huruf
+                const tampilanNilai = nilaiRow[0] !== null ? nilaiRow[0] : (nilaiRow[1] || '-');
+                document.getElementById('nilai-angka').textContent = tampilanNilai;
+                document.getElementById('nilai-komentar').textContent = nilaiRow[2] || 'Tidak ada komentar.';
+                document.getElementById('nilai-guru').textContent = '- ' + (nilaiRow[3] || 'Pembina');
+            } else {
+                // Jika belum ada nilai
+                document.querySelector('[data-nilai-extra-nama]').textContent = r[0] || namaEkstra;
+                document.getElementById('nilai-angka').textContent = '-';
+                document.getElementById('nilai-komentar').textContent = 'Nilai belum tersedia.';
+                document.getElementById('nilai-guru').textContent = '-';
+            }
+            // --- END BARU ---
+
+            // --- BARU: Ambil dan tampilkan data lomba dari tabel 'lomba' ---
+            const lombaQ = db.exec(`
+                SELECT nama, jenis, deskripsi, tanggal_mulai, tanggal_selesai, link_pendaftaran, status
+                FROM lomba
+                WHERE ekstra_terkait = '${esc(namaEkstra)}' AND status = 'aktif'
+                ORDER BY tanggal_mulai ASC
+            `);
+
+            const lombaListContainer = document.getElementById('lomba-list');
+            if (lombaQ.length > 0 && lombaQ[0].values.length > 0) {
+                lombaListContainer.innerHTML = '';
+                lombaQ[0].values.forEach(row => {
+                    const namaLomba = row[0];
+                    const jenisLomba = row[1];
+                    const deskripsiLomba = row[2] || 'Tidak ada deskripsi.';
+                    const tglMulai = row[3] ? new Date(row[3]).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Belum ditentukan';
+                    const tglSelesai = row[4] ? new Date(row[4]).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Belum ditentukan';
+                    const linkLomba = row[5] || '#'; // Gunakan '#' jika tidak ada link
+                    const statusLomba = row[6];
+
+                    // Warna badge status
+                    let statusClass = '';
+                    let statusText = statusLomba;
+                    if (statusLomba === 'aktif') {
+                        statusClass = 'bg-green-100 text-green-800';
+                    } else if (statusLomba === 'selesai') {
+                        statusClass = 'bg-gray-100 text-gray-800';
+                        statusText = 'Selesai';
+                    } else { // dibatalkan
+                        statusClass = 'bg-red-100 text-red-800';
+                        statusText = 'Dibatalkan';
+                    }
+
+                    const lombaDiv = document.createElement('div');
+                    lombaDiv.className = 'bg-white shadow-lg rounded-lg p-6 flex flex-col md:flex-row items-start';
+                    lombaDiv.innerHTML = `
+                        <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
+                            <div class="w-24 h-24 bg-indigo-100 rounded-lg flex flex-col items-center justify-center">
+                                <span class="text-4xl font-bold text-indigo-600">${new Date(row[3]).getDate() || 'TBD'}</span>
+                                <span class="text-lg font-semibold text-indigo-500 -mt-1">${new Date(row[3]).toLocaleDateString('id-ID', { month: 'short' }).toUpperCase() || 'TBD'}</span>
+                            </div>
+                        </div>
+                        <div class="flex-grow">
+                            <span class="inline-block ${statusClass} text-xs font-semibold px-2 py-1 rounded-full mb-2 uppercase">${jenisLomba}</span>
+                            <h3 class="text-xl font-bold text-gray-900">${namaLomba}</h3>
+                            <p class="text-gray-600 mb-2">${deskripsiLomba}</p>
+                            <p class="text-sm text-gray-500 mb-1"><strong>Tanggal:</strong> ${tglMulai} - ${tglSelesai}</p>
+                        </div>
+                        <div class="flex-shrink-0 mt-4 md:mt-0 md:ml-6">
+                            <a href="${linkLomba}" target="_blank" class="inline-block bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-2 px-4 rounded-md">Info Lanjut</a>
+                        </div>
+                    `;
+                    lombaListContainer.appendChild(lombaDiv);
+                });
+            } else {
+                // Jika tidak ada lomba aktif
+                document.getElementById('lomba-list').innerHTML = `
+                    <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                        <p class="text-gray-500">Belum ada lomba atau acara yang diumumkan untuk ekstra ini.</p>
+                    </div>
+                `;
+            }
+            // --- END BARU ---
 
             // contoh sertifikat
             const sertList = document.getElementById('sertifikat-list');
             sertList.innerHTML = `
                 <li class="p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center">
                     <div class="flex items-center mb-3 sm:mb-0">
-                        <svg class="w-10 h-10 text-green-500 mr-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 00-5.234 0 3.066 3.066 0 00-1.48 5.039c-.046.196-.057.41-.04.622.017.21.05.414.1.608.066.26.14.51.23.75.087.238.18.47.28.693.1.22.21.434.32.64.11.204.23.4.35.584.12.18.25.35.38.51.13.16.27.31.42.45.15.14.3.28.46.4.16.12.33.23.5.33.17.1.35.19.53.27.18.08.37.15.56.2.19.05.39.09.59.12.2.03.4.05.6.06.2.01.4.01.6 0 .2-.01.4-.02.6-.06.2-.04.39-.08.59-.12.19-.05.38-.09.56-.2.18-.08.35-.16.53-.27.17-.1.34-.2.5-.33.16-.12.31-.24.46-.4.15-.14.29-.29.42-.45.13-.16.26-.33.38-.51.12-.184.24-.38.35-.584.11-.206.22-.42.32-.64.1-.223.19-.455.28-.693.09-.24.16-.49.23-.75.05-.194.08-.398.1-.608.017-.212.006-.426-.04-.622a3.066 3.066 0 00-1.48-5.039 3.066 3.066 0 00-5.234 0zM10 15a5 5 0 100-10 5 5 0 000 10zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg>
+                        <svg class="w-10 h-10 text-green-500 mr-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 00-5.234 0 3.066 3.066 0 00-1.48 5.039c-.046.196-.057.41-.04.622.017.21.05.414.1.608.066.26.14.51.23.75.087.238.18.47.28.693.1.22.21.434.32.64.11.204.23.4.35.584.12.18.25.35.38.51.13.16.27.31.42.45.15.14.3.28.46.4.16.12.33.23.5.33.17.1.35.19.53.27.18.08.39.09.59.12.2.03.4.05.6.06.2.01.4.01.6 0 .2-.01.4-.02.6-.06.2-.04.39-.08.59-.12.19-.05.38-.09.56-.2.18-.08.35-.16.53-.27.17-.1.34-.2.5-.33.16-.12.31-.24.46-.4.15-.14.29-.29.42-.45.13-.16.26-.33.38-.51.12-.184.24-.38.35-.584.11-.206.22-.42.32-.64.1-.223.19-.455.28-.693.09-.24.16-.49.23-.75.05-.194.08-.398.1-.608.017-.212.006-.426-.04-.622a3.066 3.066 0 00-1.48-5.039 3.066 3.066 0 00-5.234 0zM10 15a5 5 0 100-10 5 5 0 000 10zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg>
                     <div>
                         <p class="text-base font-semibold text-gray-900">Sertifikat Anggota ${r[0] || namaEkstra} - Tahun Ini</p>
                         <p class="text-sm text-gray-500">Diterbitkan: -</p>
@@ -423,6 +503,17 @@
         } else {
             document.querySelector('[data-extra-nama]').textContent = namaEkstra;
             document.querySelector('[data-extra-deskripsi]').textContent = 'Data ekstra tidak ditemukan.';
+            // Juga atur nilai ke default jika ekstra tidak ditemukan
+            document.querySelector('[data-nilai-extra-nama]').textContent = namaEkstra;
+            document.getElementById('nilai-angka').textContent = '-';
+            document.getElementById('nilai-komentar').textContent = 'Data ekstra tidak ditemukan.';
+            document.getElementById('nilai-guru').textContent = '-';
+            // Juga atur lomba ke default
+            document.getElementById('lomba-list').innerHTML = `
+                <div class="bg-white shadow-lg rounded-lg p-6 text-center">
+                    <p class="text-gray-500">Tidak dapat memuat lomba karena data ekstra tidak ditemukan.</p>
+                </div>
+            `;
         }
     }
 
@@ -464,7 +555,6 @@
     document.addEventListener('click', function(e){
         if (e.target.id === 'profil-modal') closeProfilModal();
     });
-
 
 </script>
 </body>
