@@ -185,17 +185,31 @@
 
 <body class="antialiased text-gray-800 bg-white">
 
+  <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed inset-0 bg-white flex flex-col justify-center items-center z-[9999]">
+        <div class="mb-10"> <!-- Jarak antara logo dan loading -->
+            <img src="gambar/nere.webp" alt="Logo" class="w-32 h-auto"> <!-- Sesuaikan ukuran -->
+        </div>
+
+        <!-- Efek loading di bawah logo -->
+        <div class="flex space-x-2">
+            <div class="w-4 h-4 rounded-full bg-blue-600 animate-bounce" style="animation-delay: 0.1s;"></div>
+            <div class="w-4 h-4 rounded-full bg-indigo-600 animate-bounce" style="animation-delay: 0.2s;"></div>
+            <div class="w-4 h-4 rounded-full bg-purple-600 animate-bounce" style="animation-delay: 0.3s;"></div>
+        </div>
+    </div>
+
   <!-- Navbar -->
   <header class="sticky top-0 z-50 bg-white shadow-lg border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-20">
         <!-- Logo/Nama Sekolah -->
         <div class="flex items-center ">
-          <img src="gambar/Nerextra4.png" alt="Logo Nerextra" class="h-12 w-12 object-contain" id="school-logo">
+          <img src="gambar/nere.webp" alt="Logo Nerextra" class="h-12 w-12 object-contain" id="school-logo">
           <!-- <div class="text-3xl font-bold text-gray-800 mt-2">
             Nerextra
           </div> -->
-          <div class="text-3xl font-bold text-indigo-700 animate-pulse mt-2">
+          <div class="text-3xl font-bold mt-3">
             Nerextra
           </div>
         </div>
@@ -555,7 +569,7 @@
             
             <!-- Logo Placeholder (Ganti dengan logo Anda nanti) -->
             <div class="mb-4">
-                <img src="gambar/Nerextra3.png" class="h-16 w-16 mx-auto text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <img src="gambar/nere.webp" class="h-16 w-16 mx-auto text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 2l-2 5h-5l4 3.5l-2 5l5-3.5l5 3.5l-2-5l4-3.5h-5l-2-5z" />
                 </img>
             </div>
@@ -626,6 +640,36 @@
   </footer>
 
   <script>
+
+    document.addEventListener("DOMContentLoaded", function() {
+    const loadingScreen = document.getElementById('loading-screen');
+    const mainContent = document.getElementById('main-content');
+
+    // Buat elemen gambar untuk dicek apakah selesai dimuat
+    const img = new Image();
+    img.src = 'gambar-berat.jpg'; // Ganti dengan gambar besar Anda
+
+    img.onload = function () {
+        // Sembunyikan loading screen setelah gambar selesai dimuat
+        loadingScreen.classList.add('opacity-0');
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+            mainContent.classList.remove('hidden');
+        }, 500);
+    };
+
+    // Jika gambar gagal dimuat
+    img.onerror = function () {
+        console.error("Gambar gagal dimuat");
+        loadingScreen.classList.add('opacity-0');
+        setTimeout(() => {
+            loadingScreen.style.display = 'none';
+            mainContent.classList.remove('hidden');
+        }, 500);
+    };
+});
+
+
     // --- FUNGSI DINAMIS JAVASCRIPT ---
 
     let currentSlide = 0;
