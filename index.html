@@ -25,7 +25,7 @@
         }
 
     .glass-info {
-  background: linear-gradient(135deg, rgba(123, 50, 200, 0.3), rgba(75, 0, 130, 0.2)); /* Gradient ungu transparan */
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(30, 64, 175, 0.2)); /* Gradient biru transparan */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -96,36 +96,36 @@
 }
 
 
-    /* Konfigurasi warna aksen utama (Biru Indigo Profesional) */
+    /* Konfigurasi warna aksen utama (Biru Profesional) */
     .text-primary {
-      /* color: #b4c4ff; */
-      color: rgb(79, 70, 229);
+      color: #3b82f6; /* blue-500 */
     }
 
     .text-b {
-      color: #b4c4ff;
+      color: #93c5fd; /* blue-300 */
     }
 
     /* Indigo 600 */
     .bg-primary {
-      background-color: #4f46e5;
-    }
+  background: linear-gradient(to bottom right, #22d3ee, #3b82f6, #1e40af);
+  /* Atau, jika Anda ingin efek glow neon: */
+  box-shadow: 0 0 15px 3px rgba(59, 130, 246, 0.4);
+}
 
     /* Indigo 600 */
     .border-primary {
-      border-color: #4F46E5;
+      border-color: #3b82f6; /* blue-500 */
     }
 
     /* Indigo 600 */
     /* Efek hover untuk tombol utama */
     .btn-primary:hover {
-      background-color: #4338CA;
+      background: linear-gradient(to bottom right, #0ea5e9, #2563eb, #1d4ed8);
     }
 
-    /* Indigo 700 */
     /* Shadow yang lebih profesional dan lembut */
     .shadow-pro {
-      box-shadow: 0 10px 30px -5px rgba(79, 70, 229, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 10px 30px -5px rgba(59, 130, 246, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
 
     /* Gaya Slider */
@@ -194,8 +194,8 @@
         <!-- Efek loading di bawah logo -->
         <div class="flex space-x-2">
             <div class="w-4 h-4 rounded-full bg-blue-600 animate-bounce" style="animation-delay: 0.1s;"></div>
-            <div class="w-4 h-4 rounded-full bg-indigo-600 animate-bounce" style="animation-delay: 0.2s;"></div>
-            <div class="w-4 h-4 rounded-full bg-purple-600 animate-bounce" style="animation-delay: 0.3s;"></div>
+            <div class="w-4 h-4 rounded-full bg-blue-500 animate-bounce" style="animation-delay: 0.2s;"></div>
+            <div class="w-4 h-4 rounded-full bg-blue-400 animate-bounce" style="animation-delay: 0.3s;"></div>
         </div>
     </div>
 
@@ -209,7 +209,7 @@
           <!-- <div class="text-3xl font-bold text-gray-800 mt-2">
             Nerextra
           </div> -->
-          <div class="text-3xl font-bold mt-3">
+          <div class="text-3xl font-bold mt-3 bg-gradient-to-r from-blue-900 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
             Nerextra
           </div>
         </div>
@@ -228,7 +228,7 @@
           </div>
           <!-- Tombol Masuk (diperbarui) -->
           <button id="loginBtn" onclick="handleLogin()"
-            class="py-2.5 px-6 rounded-full text-white bg-primary btn-primary text-base font-semibold shadow-lg transition duration-300 transform hover:scale-105 hover:shadow-xl">
+            class="py-2.5 px-6 rounded-full text-white bg-gradient-to-br from-cyan-400 via-blue-500 to-blue-900 btn-primary text-base font-semibold shadow-lg transition duration-300 transform hover:scale-105 hover:shadow-xl">
             <i class="fas fa-sign-in-alt mr-2"></i> Masuk
           </button>
         </div>
@@ -240,7 +240,7 @@
 <!-- Hero Section dengan Background Biru dan Putih -->
 <section class="relative pt-32 pb-40 md:pt-40 md:pb-52 overflow-hidden">
   <!-- Latar Belakang Biru (Atas) -->
-  <div class="absolute inset-x-0 top-0 h-[60vh] bg-gradient-to-br from-purple-900 via-indigo-800 to-black z-0"></div>
+  <div class="absolute inset-x-0 top-0 h-[60vh] bg-gradient-to-br from-blue-900 via-blue-800 to-black z-0"></div>
 
   <!-- Latar Belakang Putih (Bawah) -->
   <div class="absolute inset-x-0 bottom-0 h-[40vh] bg-white z-0"></div>
@@ -337,7 +337,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
 
           <!-- Manfaat untuk Siswa -->
-          <div class="bg-indigo-50 p-10 rounded-3xl shadow-pro hover:shadow-2xl transition duration-500">
+          <div class="bg-blue-50 p-10 rounded-3xl shadow-pro hover:shadow-2xl transition duration-500">
             <div class="text-primary text-5xl mb-6 icon-float"><i class="fas fa-user-graduate"></i></div>
             <h3 class="text-3xl font-bold mb-6 text-gray-900">Untuk Siswa: Akses Penuh, Pilihan Tepat</h3>
             <ul class="space-y-6 text-lg text-gray-700 font-medium">
@@ -470,7 +470,7 @@
 
             <!-- Langkah 1 -->
             <div
-              class="relative flex flex-col items-center text-center p-8 bg-indigo-50 rounded-2xl shadow-lg border-l-4 border-primary md:border-l-0 md:border-t-4">
+              class="relative flex flex-col items-center text-center p-8 bg-blue-50 rounded-2xl shadow-lg border-l-4 border-primary md:border-l-0 md:border-t-4">
               <div
                 class="w-16 h-16 flex items-center justify-center rounded-full bg-primary text-white text-3xl font-extrabold mb-4 z-10 shadow-md">
                 1</div>
@@ -481,7 +481,7 @@
 
             <!-- Langkah 2 -->
             <div
-              class="relative flex flex-col items-center text-center p-8 bg-indigo-50 rounded-2xl shadow-lg border-l-4 border-primary md:border-l-0 md:border-t-4 mt-8 md:mt-0">
+              class="relative flex flex-col items-center text-center p-8 bg-blue-50 rounded-2xl shadow-lg border-l-4 border-primary md:border-l-0 md:border-t-4 mt-8 md:mt-0">
               <div
                 class="w-16 h-16 flex items-center justify-center rounded-full bg-primary text-white text-3xl font-extrabold mb-4 z-10 shadow-md">
                 2</div>
@@ -491,7 +491,7 @@
 
             <!-- Langkah 3 -->
             <div
-              class="relative flex flex-col items-center text-center p-8 bg-indigo-50 rounded-2xl shadow-lg border-l-4 border-primary md:border-l-0 md:border-t-4 mt-8 md:mt-0">
+              class="relative flex flex-col items-center text-center p-8 bg-blue-50 rounded-2xl shadow-lg border-l-4 border-primary md:border-l-0 md:border-t-4 mt-8 md:mt-0">
               <div
                 class="w-16 h-16 flex items-center justify-center rounded-full bg-primary text-white text-3xl font-extrabold mb-4 z-10 shadow-md">
                 3</div>
@@ -504,7 +504,7 @@
     </section>
 
 <!-- 6. Ajakan untuk Mencoba Platform -->
-<section class="py-24 md:py-25 bg-primary relative overflow-hidden">
+<section class="py-24 md:py-25 bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-900 relative overflow-hidden">
 
   <!-- Gelombang Atas Menghadap ke Bawah -->
   <div class="absolute top-0 left-0 w-full h-auto pointer-events-none rotate-180">
@@ -549,7 +549,7 @@
     <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6 tracking-tight">
       Wes Siap Ta Gawe Sekolahe Umak Luwih Mbois?
     </h2>
-    <p class="text-xl text-indigo-100 mb-10 font-light">
+    <p class="text-xl text-blue-100 mb-10 font-light">
       Langsung ae takon-takon nang admin!
       
     </p>
@@ -569,12 +569,12 @@
             
             <!-- Logo Placeholder (Ganti dengan logo Anda nanti) -->
             <div class="mb-4">
-                <img src="gambar/nere.webp" class="h-16 w-16 mx-auto text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <img src="gambar/nere.webp" class="h-16 w-16 mx-auto text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 2l-2 5h-5l4 3.5l-2 5l5-3.5l5 3.5l-2-5l4-3.5h-5l-2-5z" />
                 </img>
             </div>
 
-            <h2 class="text-5xl font-extrabold text-indigo-600 animate-pulse">
+            <h2 class="text-5xl font-extrabold bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-900 bg-clip-text text-transparent">
                 Selamat Datang
             </h2>
             <p class="mt-3 text-lg text-gray-600">Josjiss Bolo.</p>
@@ -585,7 +585,7 @@
 
 
   <!-- Footer -->
-  <footer class="bg-gray-900 text-white pt-16 pb-8">
+  <footer class=" bg-slate-200 text-white pt-16 pb-8">
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid grid-cols-2 md:grid-cols-4 gap-8 border-b border-gray-700 pb-10">
@@ -593,26 +593,26 @@
         <!-- Kolom 1: Info Platform -->
         <div>
           <h4 class="text-2xl font-extrabold mb-4 text-primary">Nerextra</h4>
-          <p class="text-gray-400 text-sm font-light">Sistem digitalisasi administrasi ekstra untuk efisiensi dan
+          <p class="text-slate-600 text-sm font-light">Sistem digitalisasi administrasi ekstra untuk efisiensi dan
             transparansi.</p>
         </div>
 
         <!-- Kolom 2: Tautan Penting -->
         <div>
-          <h4 class="text-lg font-semibold mb-4">Pintasan</h4>
+          <h4 class="text-black font-bold mb-4">Pintasan</h4>
           <ul class="space-y-3 text-base">
-            <li><a href="#fitur" class="text-gray-400 hover:text-primary transition duration-150">Fitur Sistem</a></li>
-            <li><a href="#manfaat" class="text-gray-400 hover:text-primary transition duration-150">Keuntungan</a></li>
-            <li><a href="#alur" class="text-gray-400 hover:text-primary transition duration-150">Alur Proses</a></li>
+            <li><a href="#fitur" class="text-slate-600 hover:text-primary transition duration-150">Fitur Sistem</a></li>
+            <li><a href="#manfaat" class="text-slate-600 hover:text-primary transition duration-150">Keuntungan</a></li>
+            <li><a href="#alur" class="text-slate-600 hover:text-primary transition duration-150">Alur Proses</a></li>
             <li><button onclick="showCustomMessage('Fitur masuk akan segera tersedia.','info')"
-                class="text-gray-400 hover:text-primary transition duration-150">Akses Sistem</button></li>
+                class="text-slate-600 hover:text-primary transition duration-150">Akses Sistem</button></li>
           </ul>
         </div>
 
         <!-- Kolom 3: Info Kontak -->
         <div>
-          <h4 class="text-lg font-semibold mb-4">Hubungi Kami</h4>
-          <ul class="space-y-3 text-base text-gray-400">
+          <h4 class="text-black font-bold mb-4">Hubungi Kami</h4>
+          <ul class="space-y-3 text-base text-slate-600">
             <li><i class="fas fa-phone mr-3"></i> 08123456789</li>
             <li><i class="fas fa-envelope mr-3"></i> info@dummy.sch.id</li>
           </ul>
@@ -620,13 +620,13 @@
 
         <!-- Kolom 4: Media Sosial (Simulasi) -->
         <div>
-          <h4 class="text-lg font-semibold mb-4">Ikuti Kami</h4>
+          <h4 class="text-black font-bold mb-4">Ikuti Kami</h4>
           <div class="flex space-x-5 text-2xl">
-            <a href="https://www.instagram.com/sulthonfbr/" class="text-gray-400 hover:text-primary transition duration-150"><i
+            <a href="https://www.instagram.com/sulthonfbr/" class="text-slate-600 hover:text-primary transition duration-150"><i
                 class="fab fa-instagram"></i></a>
-            <a href="#" class="text-gray-400 hover:text-primary transition duration-150"><i
+            <a href="#" class="text-slate-600 hover:text-primary transition duration-150"><i
                 class="fab fa-facebook-f"></i></a>
-            <a href="https://www.youtube.com/c/sman1turen" class="text-gray-400 hover:text-primary transition duration-150"><i
+            <a href="https://www.youtube.com/c/sman1turen" class="text-slate-600 hover:text-primary transition duration-150"><i
                 class="fab fa-youtube"></i></a>
           </div>
         </div>
@@ -727,7 +727,7 @@
     // 5. Fungsi Dinamis Judul Hero (Lebih halus)
     function updateHeroTitle() {
       const titles = [
-        "Efisien. Transparan. Digital.",
+        "Efisien, Transparan, Digital.",
         "Transformasi Ekstrakurikuler.",
         "Akses Mudah untuk Siswa."
       ];

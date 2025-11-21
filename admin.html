@@ -19,12 +19,12 @@
         .custom-scrollbar::-webkit-scrollbar-track { background-color: #edf2f7; }
         .modal-overlay { background-color: rgba(0, 0, 0, 0.6); backdrop-filter: blur(5px); z-index: 999; }
         .admin-tab-btn.active {
-            border-color: #4f46e5;
-            color: #4f46e5;
+            border-color: #3b82f6; /* blue-500 */
+            color: #3b82f6; /* blue-500 */
             font-weight: 600;
         }
         .admin-tab-btn:hover {
-            border-color: #a5b4fc;
+            border-color: #93c5fd; /* blue-300 */
         }
     </style>
 </head>
@@ -38,7 +38,7 @@
           <!-- <div class="text-3xl font-bold text-gray-800 mt-2">
             Nerextra
           </div> -->
-          <div class="text-3xl font-bold mt-3">
+          <div class="text-3xl font-bold mt-3 bg-gradient-to-r from-blue-900 via-blue-500 to-cyan-400 bg-clip-text text-transparent">
             Nerextra
           </div>
         </div>
@@ -58,31 +58,31 @@
         <h1 class="text-3xl text-gray-800 mb-6 border-b pb-2 font-medium">Admin Dashboard</h1>
         <!-- Ringkasan Data -->
         <div id="dashboard-overview" class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-xl p-6 shadow-lg">
+            <div class="bg-gradient-to-r from-blue-900 via-blue-500 to-cyan-400 text-white rounded-xl p-6 shadow-lg">
                 <h3 class="text-lg font-semibold">Total Ekstra</h3>
                 <p class="text-3xl font-bold mt-2" id="total-ekstra">0</p>
             </div>
-            <div class="bg-gradient-to-r from-green-500 to-teal-600 text-white rounded-xl p-6 shadow-lg">
+            <div class="bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-900 text-white rounded-xl p-6 shadow-lg">
                 <h3 class="text-lg font-semibold">Total Peserta</h3>
                 <p class="text-3xl font-bold mt-2" id="total-peserta">0</p>
             </div>
-            <div class="bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-xl p-6 shadow-lg">
+            <div class="bg-gradient-to-r from-blue-900 via-blue-500 to-cyan-400 text-white rounded-xl p-6 shadow-lg">
                 <h3 class="text-lg font-semibold">Pendaftar Menunggu</h3>
                 <p class="text-3xl font-bold mt-2" id="total-pendaftar-baru">0</p>
             </div>
-            <div class="bg-gradient-to-r from-blue-500 to-cyan-600 text-white rounded-xl p-6 shadow-lg">
+            <div class="bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-900 text-white rounded-xl p-6 shadow-lg">
                 <h3 class="text-lg font-semibold">Sudah Diterima</h3>
                 <p class="text-3xl font-bold mt-2" id="total-diterima">0</p>
             </div>
         </div>
         <!-- Tab Menu -->
         <div class="flex border-b mb-6 bg-white rounded-t-xl shadow-sm overflow-hidden">
-            <button class="admin-tab-btn px-4 py-3 text-sm font-medium border-b-2 border-indigo-600 text-indigo-600 transition -mb-px active" onclick="showAdminSubView('manage-ekskul')" id="tab-manage-ekskul">Kelola Ekstra</button>
-            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('activate-applicants')" id="tab-activate-applicants">Aktivasi Pendaftar</button>
-            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('manage-peserta')" id="tab-manage-peserta">Kelola Peserta</button>
-            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('notifications')" id="tab-notifications">Notifikasi</button>
-            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('manage-nilai')" id="tab-manage-nilai">Penilaian Ekstra</button>
-            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-indigo-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('manage-lomba')" id="tab-manage-lomba">Kelola Lomba</button>
+            <button class="admin-tab-btn px-4 py-3 text-sm font-medium border-b-2 border-blue-500 text-blue-500 transition -mb-px active" onclick="showAdminSubView('manage-ekskul')" id="tab-manage-ekskul">Kelola Ekstra</button>
+            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-blue-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('activate-applicants')" id="tab-activate-applicants">Aktivasi Pendaftar</button>
+            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-blue-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('manage-peserta')" id="tab-manage-peserta">Kelola Peserta</button>
+            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-blue-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('notifications')" id="tab-notifications">Notifikasi</button>
+            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-blue-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('manage-nilai')" id="tab-manage-nilai">Penilaian Ekstra</button>
+            <button class="admin-tab-btn px-4 py-3 text-sm font-medium text-gray-500 hover:text-blue-600 transition -mb-px border-b-2 border-transparent" onclick="showAdminSubView('manage-lomba')" id="tab-manage-lomba">Kelola Lomba</button>
         </div>
         <!-- Kelola Ekstra -->
         <div id="manage-ekskul" class="admin-subview">
@@ -93,7 +93,7 @@
             </div>
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-xl font-semibold text-gray-700">Daftar Semua Ekstra</h2>
-                <button onclick="openAddExkulModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition font-medium">
+                <button onclick="openAddExkulModal()" class="px-4 py-2 bg-gradient-to-r from-cyan-400 via-blue-500 to-blue-900 text-white rounded-lg shadow-md hover:opacity-90 transition font-medium">
                     + Tambah Ekskul Baru
                 </button>
             </div>
@@ -162,7 +162,7 @@
                         <input 
                             type="text" 
                             id="notification-title" 
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                             placeholder="Contoh: Jadwal Ekstra Minggu Ini"
                             required
                         >
@@ -172,14 +172,14 @@
                         <textarea 
                             id="notification-message" 
                             rows="3" 
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
                             placeholder="Contoh: Ekstra Pramuka akan latihan hari Jumat jam 15:00 di lapangan."
                             required
                         ></textarea>
                     </div>
                     <button 
                         type="submit" 
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition font-medium"
+                        class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-md hover:opacity-90 transition font-medium"
                     >
                         Kirim Notifikasi
                     </button>
@@ -204,7 +204,7 @@
             <div class="bg-white p-6 rounded-xl shadow-lg">
                 <div class="mb-4">
                     <label for="nilai-ekstra-select" class="block text-sm font-medium text-gray-700 mb-1">Pilih Ekstra</label>
-                    <select id="nilai-ekstra-select" class="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                    <select id="nilai-ekstra-select" class="w-full md:w-1/3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option value="">-- Pilih Ekstra --</option>
                         <!-- Opsi akan diisi oleh JavaScript -->
                     </select>
@@ -234,7 +234,7 @@
         <div id="manage-lomba" class="admin-subview hidden">
             <h2 class="text-xl font-semibold text-gray-700 mb-4">Kelola Lomba & Acara</h2>
             <div class="mb-4">
-                <button onclick="openAddLombaModal()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow-md hover:bg-indigo-700 transition font-medium">
+                <button onclick="openAddLombaModal()" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg shadow-md hover:opacity-90 transition font-medium">
                     + Tambah Lomba Baru
                 </button>
             </div>
@@ -263,15 +263,15 @@
         <h3 id="admin-modal-title" class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Tambah Ekskul Baru</h3>
         <form id="admin-ekskul-form" onsubmit="event.preventDefault(); saveExkul();">
             <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Nama Ekskul</label>
-            <input type="text" id="admin-name" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <input type="text" id="admin-name" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500">
             <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Deskripsi</label>
-            <textarea id="admin-description" required rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            <textarea id="admin-description" required rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
             <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">URL Foto Ekstra</label>
-            <input type="text" id="admin-foto" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500" placeholder="https://...">
+            <input type="text" id="admin-foto" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500" placeholder="https://...">
             <input type="hidden" id="admin-ekskul-id">
             <div class="flex justify-end space-x-3 mt-6">
                 <button type="button" onclick="closeAdminModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium">Batal</button>
-                <button type="submit" id="admin-submit-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium">Simpan Ekskul</button>
+                <button type="submit" id="admin-submit-btn" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg hover:opacity-90 transition font-medium">Simpan Ekskul</button>
             </div>
         </form>
     </div>
@@ -281,29 +281,29 @@
         <h3 id="admin-lomba-modal-title" class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Tambah Lomba Baru</h3>
         <form id="admin-lomba-form" onsubmit="event.preventDefault(); saveLomba();">
             <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Nama Lomba</label>
-            <input type="text" id="admin-lomba-name" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <input type="text" id="admin-lomba-name" required class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500">
             <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Jenis</label>
-            <select id="admin-lomba-jenis" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <select id="admin-lomba-jenis" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="Kompetisi">Kompetisi</option>
                 <option value="Festival">Festival</option>
                 <option value="Pameran">Pameran</option>
                 <option value="Lainnya">Lainnya</option>
             </select>
             <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Deskripsi</label>
-            <textarea id="admin-lomba-description" rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            <textarea id="admin-lomba-description" rows="3" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
             <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Tanggal Mulai</label>
-            <input type="date" id="admin-lomba-tanggal-mulai" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <input type="date" id="admin-lomba-tanggal-mulai" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500">
             <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Tanggal Selesai</label>
-            <input type="date" id="admin-lomba-tanggal-selesai" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <input type="date" id="admin-lomba-tanggal-selesai" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500">
             <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Link Pendaftaran</label>
-            <input type="url" id="admin-lomba-link" placeholder="https://..." class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <input type="url" id="admin-lomba-link" placeholder="https://..." class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500">
             <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Ekstra Terkait</label>
-            <select id="admin-lomba-ekstra" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <select id="admin-lomba-ekstra" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="">-- Pilih Ekstra --</option>
                 <!-- Opsi akan diisi oleh JavaScript -->
             </select>
             <label class="block text-sm font-medium text-gray-700 mt-3 mb-1">Status</label>
-            <select id="admin-lomba-status" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-indigo-500 focus:border-indigo-500">
+            <select id="admin-lomba-status" class="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500">
                 <option value="aktif">Aktif</option>
                 <option value="selesai">Selesai</option>
                 <option value="dibatalkan">Dibatalkan</option>
@@ -311,13 +311,13 @@
             <input type="hidden" id="admin-lomba-id">
             <div class="flex justify-end space-x-3 mt-6">
                 <button type="button" onclick="closeAdminLombaModal()" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition font-medium">Batal</button>
-                <button type="submit" id="admin-lomba-submit-btn" class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition font-medium">Simpan Lomba</button>
+                <button type="submit" id="admin-lomba-submit-btn" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded-lg hover:opacity-90 transition font-medium">Simpan Lomba</button>
             </div>
         </form>
     </div>
 </div>
 <!-- Toast Notification -->
-<div id="toast-notification" class="fixed bottom-5 right-5 p-4 rounded-lg shadow-xl text-white opacity-0 transition-opacity duration-300" style="z-index: 1000; background-color: #4f46e5;">
+<div id="toast-notification" class="fixed bottom-5 right-5 p-4 rounded-lg shadow-xl text-white opacity-0 transition-opacity duration-300" style="z-index: 1000; background-color: #3b82f6;"> <!-- Warna biru -->
     <span id="toast-message"></span>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
@@ -444,8 +444,8 @@
                 datasets: [{
                     label: 'Jumlah Diterima',
                      data,
-                    backgroundColor: 'rgba(79, 70, 229, 0.6)',
-                    borderColor: 'rgba(79, 70, 229, 1)',
+                    backgroundColor: 'rgba(59, 130, 246, 0.6)', // Biru
+                    borderColor: 'rgba(59, 130, 246, 1)', // Biru
                     borderWidth: 1
                 }]
             },
@@ -476,11 +476,11 @@
             tr.innerHTML = `
                 <td class="px-6 py-4 whitespace-nowrap">${row[1]}</td>
                 <td class="px-6 py-4 text-sm truncate max-w-xs">${row[2] || 'Tidak ada'}</td>
-                <td class="px-6 py-4"><a href="${row[3]}" target="_blank" class="text-indigo-600 hover:underline">Lihat</a></td>
+                <td class="px-6 py-4"><a href="${row[3]}" target="_blank" class="text-blue-600 hover:underline">Lihat</a></td>
                 <td class="px-6 py-4 text-sm">${row[4]} pendaftar</td>
                 <td class="px-6 py-4 text-sm">${row[5]} diterima</td>
                 <td class="px-6 py-4 text-center text-sm font-medium">
-                    <button class="text-indigo-600 hover:text-indigo-900 mr-3" onclick="openEditExkulModal(${row[0]}, '${row[1]}', '${row[2]}', '${row[3] || ''}')">Edit</button>
+                    <button class="text-blue-600 hover:text-blue-900 mr-3" onclick="openEditExkulModal(${row[0]}, '${row[1]}', '${row[2]}', '${row[3] || ''}')">Edit</button>
                     <button class="text-red-600 hover:text-red-900" onclick="hapusEkstra(${row[0]}, '${row[1]}')">Hapus</button>
                 </td>
             `;
@@ -513,7 +513,7 @@
                     }">${row[3]}</span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
-                    <button class="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600 mr-2" onclick="setStatus(${row[4]}, 'diterima')">Terima</button>
+                    <button class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 mr-2" onclick="setStatus(${row[4]}, 'diterima')">Terima</button>
                     <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" onclick="setStatus(${row[4]}, 'ditolak')">Tolak</button>
                 </td>
             `;
@@ -735,7 +735,7 @@ function tampilkanPesertaUntukPenilaian(namaEkstra) {
             <td class="px-6 py-4 whitespace-nowrap"><input type="text" maxlength="2" value="${nilaiHuruf}" class="nilai-huruf-input w-16 px-2 py-1 border border-gray-300 rounded" data-nis="${nis}" data-ekstra="${namaEkstra}"></td>
             <td class="px-6 py-4"><input type="text" value="${komentar}" class="komentar-input w-full px-2 py-1 border border-gray-300 rounded" data-nis="${nis}" data-ekstra="${namaEkstra}"></td>
             <td class="px-6 py-4 whitespace-nowrap text-center">
-                <button class="save-nilai-btn px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700" data-nis="${nis}" data-ekstra="${namaEkstra}" data-id="${id_nilai}">Simpan</button>
+                <button class="save-nilai-btn px-3 py-1 bg-gradient-to-r from-blue-500 to-blue-700 text-white rounded hover:opacity-90" data-nis="${nis}" data-ekstra="${namaEkstra}" data-id="${id_nilai}">Simpan</button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -827,11 +827,11 @@ function tampilkanLomba() {
             <td class="px-6 py-4 whitespace-nowrap">${row[5] || '-'}</td>
             <td class="px-6 py-4 whitespace-nowrap">
                 <span class="px-2 py-1 rounded-full text-white ${
-                    row[6] === 'aktif' ? 'bg-green-500' : row[6] === 'selesai' ? 'bg-gray-500' : 'bg-red-500'
+                    row[6] === 'aktif' ? 'bg-blue-500' : row[6] === 'selesai' ? 'bg-gray-500' : 'bg-red-500'
                 }">${row[6]}</span>
             </td>
             <td class="px-6 py-4 text-center text-sm font-medium">
-                <button class="text-indigo-600 hover:text-indigo-900 mr-3" onclick="openEditLombaModal(${row[0]}, '${row[1]}', '${row[2]}', '${row[3] || ''}', '${row[4] || ''}', '${row[5] || ''}', '${row[6]}', '${(result[0].values.find(r => r[0] === row[0])?.[7] || '').replace(/'/g, "\\'")}', '${(result[0].values.find(r => r[0] === row[0])?.[8] || '').replace(/'/g, "\\'")}')">Edit</button>
+                <button class="text-blue-600 hover:text-blue-900 mr-3" onclick="openEditLombaModal(${row[0]}, '${row[1]}', '${row[2]}', '${row[3] || ''}', '${row[4] || ''}', '${row[5] || ''}', '${row[6]}', '${(result[0].values.find(r => r[0] === row[0])?.[7] || '').replace(/'/g, "\\'")}', '${(result[0].values.find(r => r[0] === row[0])?.[8] || '').replace(/'/g, "\\'")}')">Edit</button>
                 <button class="text-red-600 hover:text-red-900" onclick="hapusLomba(${row[0]}, '${row[1].replace(/'/g, "\\'")}')">Hapus</button>
             </td>
         `;
